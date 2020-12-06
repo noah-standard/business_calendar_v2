@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.IUserDAO">
+    <select id="getCalendar" parameterType="com.end.demo.vo.XhrVO" resultType="com.end.demo.vo.CalendarVO">
+        select id, '('||NICKNAME||') '||title as "title", to_char(startday,'YYYY-MM-DD') as "start", to_char(endday,'YYYY-MM-DD') as "end", color.color from CALENDAR
+        inner join USER_LIST using(id) inner join color using (agree_flag) where DELETE_FLAG = #{delete_flag}
+    </select>
+    <select id="getUser" parameterType="com.end.demo.vo.UserVO" resultType="com.end.demo.vo.UserVO">
+        select * from cs_member where USERID = #{userid}
+    </select>
+    <insert id="insertCalendar" parameterType="com.end.demo.vo.CalendarVO">
+        insert into CALENDAR (i,id,title,type,STARTDAY,endday,CONTENT)
+        values(CALENDAR_SEQ.nextval,#{id},#{title},#{type},#{startday},#{endday},#{content})
+    </insert>
+    <insert id="insertHoliday" parameterType="com.end.demo.vo.HolidayVO">
+        insert into CS_CALENDER_HOLIDAY (IDX,YEAR,HOLI_FLAG,DATE_KIND,LOCDATE_NAME,LOCDATE,REG_DATE,REG_IP)
+        values(CS_CALENDER_HOLIDAY_SEQ.nextval,#{year},#{holi_flag},#{date_kind},#{locdate_name},#{locdate},#{reg_date},#{reg_ip})
+    </insert>
+    <select id="getList" resultType="com.end.demo.vo.CalendarVO">
+        select * from (
+        select row_number() over(order by i asc) as i, id, type, title, to_char(startday,'YYYY-MM-DD') as startday,
+        to_char(endday,'YYYY-MM-DD') AS endday, content, delete_flag , AGREE_FLAG, nickname
+        from CALENDAR inner join USER_LIST using (id)
+        <choose>
+            <when test="!name.equals('admin')">
+                where name = #{name} and DELETE_FLAG =0
+            </when>
+            <otherwise>
+                where DELETE_FLAG = 0
+            </otherwise>
+        </choose>) where i between ${sIndex} and ${eIndex}
+    </select>
+    <select id="maxCountList" resultType="_int">
+        select ceil(count(i)/10) from CALENDAR inner join USER_LIST using(id)
+        <choose>
+            <when test="!name.equals('admin')">
+                where name = #{name} and DELETE_FLAG =0
+            </when>
+            <otherwise>
+                where DELETE_FLAG = 0
+            </otherwise>
+        </choose>
+    </select>
+    <update id="updateDelete" parameterType="com.end.demo.vo.CalendarVO">
+        update CALENDAR set DELETE_FLAG = 1 where i in
+        <foreach collection="list" item="i" index="index" open="(" separator="," close=")">#{i}
+        </foreach>
+    </update>
+    <update id="updateAgree" parameterType="hashmap">
+        update CALENDAR set AGREE_FLAG = #{agree_flag} where i in
+        <foreach collection="listInteger" item="i" index="index" open="(" separator="," close=")">#{i.value}
+        </foreach>
+    </update>
+    <select id="getDetail" parameterType="_int" resultType="com.end.demo.vo.CalendarVO">
+        select i,title, type, to_char(STARTDAY,'yyyy-mm-dd') as "startday", to_char(endday,'yyyy-mm-dd') as "endday",name, content from CALENDAR inner join USER_LIST using (id) where i = #{i}
+    </select>
+    <update id="updateForm" parameterType="com.end.demo.vo.CalendarVO">
+        update CALENDAR
+        set type = #{type}, startday = #{startday}, endday = #{endday}, CONTENT=#{content}, title = #{title}, agree_flag=#{agree_flag}
+        where i = #{i}
+    </update>
+    <select id="getEtc" parameterType="string" resultType="com.end.demo.vo.UserVO">
+        select id,nickname  from USER_LIST where NAME = #{name}
+    </select>
+</mapper>

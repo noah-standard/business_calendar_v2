@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IAdminDAO">
+
+    <insert id="insertAdminMenu" parameterType="HashMap">
+        <if test="cate == 0">
+        insert into cs_admin_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,del_flag,del_date,reg_date,reg_ip)
+        values(cs_admin_menu_seq.NEXTVAL,cs_admin_menu_seq.CURRVAL,0,cs_admin_menu_seq.CURRVAL,#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+        <if test="cate != 0">
+        insert into cs_admin_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,del_flag,del_date,reg_date,reg_ip)
+        values(cs_admin_menu_seq.NEXTVAL,#{cate},(SELECT ref_step+1 FROM CS_ADMIN_MENU WHERE idx = #{cate} ),(select * from (SELECT ref_level+1 FROM CS_ADMIN_MENU WHERE ref = #{cate} order by ref_level desc) where rownum <![CDATA[<]]>  2),#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+    </insert>
+    <insert id="insertBBSManage" parameterType="com.end.demo.vo.BBSManageVO">
+            insert into cs_bbs (IDX,name,code,bbs_type,bbs_pds,bbs_comment,bbs_read,bbs_write,bbs_modify,list_gallery,list_height,list_page,memo1,memo2,memo3,memo4,del_flag,reg_date)
+            values(cs_bbs_seq.NEXTVAL,#{name},#{code},#{bbs_type},#{bbs_pds},#{bbs_comment},#{bbs_read},#{bbs_write},#{bbs_modify},#{list_gallery},#{list_height},#{list_page},#{memo1},#{memo2},#{memo3},#{memo4},#{del_flag},#{reg_date})
+    </insert>
+    <insert id="insertBBS" parameterType="com.end.demo.vo.BBSDataVO">
+            insert into cs_bbs_data (IDX,code,subject,writer,password,email,notice,ref,ref_step,ref_level,content,hid_file,bbs_file0,bbs_file1,bbs_file2,del_flag,reg_date)
+            values(cs_bbs_data_seq.NEXTVAL,#{code},#{subject},#{writer},'test',#{email},#{notice},cs_bbs_data_seq.CURRVAL,0,cs_bbs_data_seq.CURRVAL,#{content},'test','test','test','test',0,#{reg_date})
+    </insert>
+    <select id="getAdmin" parameterType="com.end.demo.vo.AdminVO" resultType="com.end.demo.vo.AdminVO">
+        select * from cs_member_admin where USERID = #{userid}
+    </select>
+    <select id="getRandomIdx" resultType="int">
+        select idx from cs_bbs_random
+    </select>
+    <select id="getTotalBBSManage" resultType="int">
+        select count(*) from cs_bbs where del_flag = 0
+    </select>
+    <select id="selectBBSManage" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where del_flag = 0
+    </select>
+    <select id="selectGroupBBSManage" resultType="HashMap">
+        select bbs_type, count(bbs_type) as cnt from cs_bbs where del_flag = 0 group by bbs_type
+    </select>
+    <update id="updateRandomIdx">
+        update cs_bbs_random set idx = idx + 1
+    </update>
+    <select id="selectAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 order by ref_level asc ,ref desc, ref_step asc
+    </select>
+    <select id="selectAdminMenuOne" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 and state = 0 and ref = ${menu}  order by ref desc, ref_step asc, ref_level asc
+    </select>
+    <select id="selectOneAdminMenu" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 and idx = #{node}
+    </select>
+    <select id="adminMenuCount" parameterType="String" resultType="int">
+        select count(*) from cs_admin_menu where del_flag =0 and ref = #{menu}
+    </select>
+    <select id="selectMemLevel" resultType="com.end.demo.vo.MemLevelVO">
+        select * from cs_mem
+    </select>
+    <select id="getBBSManage" parameterType="String" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where idx = ${idx}
+    </select>
+    <select id="getBBSManageCode" parameterType="String" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where code = '${code}'
+    </select>
+    <select id="getType" parameterType="String" resultType="String">
+        select bbs_type from cs_bbs where code = '${code}'
+    </select>
+    <!-- 레코드 갯수 계산    -->
+    <select id = "countBBSData" resultType="int">
+        select count(*)
+        from cs_bbs_data
+        <include refid="search"></include>
+    </select>
+    <select id="selectBBS" parameterType="String" resultType="com.end.demo.vo.BBSDataVO">
+        <include refid="paging_header"/>
+        select rownum,cs_bbs_data.* from cs_bbs_data
+      <include refid="search"/>
+            <if test="list_order == '0'">
+                order by ref desc, ref_step asc
+            </if>
+            <if test="list_order == '1'">
+                order by ref asc, ref_step asc
+            </if>
+            <if test="list_order == ''">
+                order by ref desc, ref_step asc
+            </if>
+        <include refid="paging_footer" />
+    </select>
+    <select id="getBBSData" parameterType="String" resultType="com.end.demo.vo.BBSDataVO">
+        select * from cs_bbs_data where idx = #{idx}
+    </select>
+    <update id="updateBBSManage" parameterType="com.end.demo.vo.BBSManageVO">
+        update cs_bbs set
+            bbs_type = '${bbs_type}',
+            name = '${name}',
+            bbs_write = '${bbs_write}',
+            bbs_read = '${bbs_read}',
+            bbs_modify = '${bbs_modify}',
+            list_height = '${list_height}',
+            list_page = '${list_page}'
+        where idx = ${idx}
+    </update>
+    <update id="deleteBBSManage" parameterType="String">
+        update cs_bbs set del_flag = 1 where idx = ${idx}
+    </update>
+    <update id="updateAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO">
+        <if test='node_parent != "#"'>
+        update cs_admin_menu set
+            ref = ${node_parent},
+            ref_step = (select ref_step+1 from cs_admin_menu where idx = ${node_parent}),
+            ref_level = ${node_position}
+        where idx = ${node}
+        </if>
+        <if test='node_parent == "#"'>
+            <foreach collection="nodes_depth1" item = "item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+                update cs_admin_menu set
+                ref_level = ${index}
+                where idx = ${item}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="updateAdminMenuOne" parameterType="com.end.demo.vo.AdminMenuVO">
+        update cs_admin_menu set
+            name = #{name},
+            link = #{link},
+            state = #{state}
+        where idx = #{idx}
+    </update>
+    <update id="deleteAdminMenuOne" parameterType="String">
+        update cs_admin_menu set
+            del_flag = 1
+        where idx = #{idx}
+    </update>
+    <update id="deleteBBSData" parameterType="String">
+        update cs_bbs_data set del_flag = 1 where idx = #{idx}
+    </update>
+    <update id="updateBBS" parameterType="com.end.demo.vo.BBSDataVO">
+        update cs_bbs_data set
+        subject = #{subject},
+        writer = #{writer},
+        notice = #{notice},
+        content = #{content}
+        where idx = #{idx}
+    </update>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                    code = '${code}'
+                    and del_flag= 0
+                    and (writer like '%'||'${keyword}'||'%'
+                    or subject like '%'||'${keyword}'||'%'
+                    or content like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where code = '${code}'
+                and del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

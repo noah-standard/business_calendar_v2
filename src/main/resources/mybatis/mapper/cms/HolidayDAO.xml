@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IHolidayDAO">
+    <insert id="writeHoliday" parameterType="com.end.demo.vo.HolidayVO">
+        insert into cs_calender_holiday (idx,year,holi_flag,locdate_name,locdate,reg_date,reg_ip)
+        values (cs_calender_holiday_seq.NEXTVAL,#{year},#{holi_flag},#{locdate_name},#{locdate},#{reg_date},#{reg_ip})
+    </insert>
+    <select id="selectHolidayList" resultType="com.end.demo.vo.HolidayVO">
+        select * from cs_calender_holiday where 1 = 1 order by reg_date desc
+    </select>
+    <select id="getHoliday" parameterType="int" resultType="com.end.demo.vo.HolidayVO">
+        select idx, year, holi_flag , locdate_name,to_char(locdate,'YYYY-MM-DD') as locdate from cs_calender_holiday where idx = ${idx}
+    </select>
+    <select id = "countHolidayData" resultType="int">
+        select count(*)
+        from cs_calender_holiday
+<!--        <include refid="search"></include>-->
+    </select>
+    <update id="editHoliday" parameterType="com.end.demo.vo.HolidayVO">
+        update cs_calender_holiday
+        set
+            holi_flag = #{holi_flag},
+            locdate_name = #{locdate_name},
+            locdate = #{locdate}
+        where idx = #{idx}
+    </update>
+    <delete id="deleteHoliday" parameterType="int">
+        delete from cs_calender_holiday where idx = #{idx}
+    </delete>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                    and del_flag= 0
+                    and (writer like '%'||'${keyword}'||'%'
+                    or subject like '%'||'${keyword}'||'%'
+                    or content like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where code = '${code}'
+                and del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IAdminBBSDataDAO">
+    <insert id="insertBBSData" parameterType="com.end.demo.vo.BBSDataVO">
+        insert into cs_bbs_data (IDX,code,subject,writer,
+        <if test="password != null">
+            password,
+        </if>
+        email,notice,ref,ref_step,ref_level,content,hid_file,bbs_file0,bbs_file1,bbs_file2,del_flag,reg_date)
+        values(cs_bbs_data_seq.NEXTVAL,#{code},#{subject},#{writer},
+        <if test="password != null">
+            #{password},
+        </if>
+        #{email},#{notice},cs_bbs_data_seq.CURRVAL,0,cs_bbs_data_seq.CURRVAL,#{content},#{hid_file},#{bbs_file0},#{bbs_file1},#{bbs_file2},0,#{reg_date})
+    </insert>
+    <!-- 레코드 갯수 계산    -->
+    <select id="countBBSData" resultType="int">
+        select count(*)
+        from cs_bbs_data
+        <include refid="search"></include>
+    </select>
+    <select id="selectBBSData" parameterType="String" resultType="com.end.demo.vo.BBSDataVO">
+        <include refid="paging_header"/>
+        select rownum,cs_bbs_data.* from cs_bbs_data
+        <include refid="search"/>
+        <if test="list_order == '0'">
+            order by ref desc, ref_step asc
+        </if>
+        <if test="list_order == '1'">
+            order by ref asc, ref_step asc
+        </if>
+        <if test="list_order == ''">
+            order by ref desc, ref_step asc
+        </if>
+        <include refid="paging_footer"/>
+    </select>
+    <select id="getBBSData" parameterType="long" resultType="com.end.demo.vo.BBSDataVO">
+        select * from cs_bbs_data where idx = #{idx}
+    </select>
+    <update id="updateBBSDataReadCnt" parameterType="long">
+        update cs_bbs_data
+        set
+        read_cnt = read_cnt +1
+        where idx = #{idx}
+    </update>
+    <update id="deleteBBSData" parameterType="long">
+        update cs_bbs_data set del_flag = 1 where idx = #{idx}
+    </update>
+    <update id="updateBBSData" parameterType="com.end.demo.vo.BBSDataVO">
+        update cs_bbs_data set
+        subject = #{subject},
+        writer = #{writer},
+        notice = #{notice},
+        content = #{content}
+        where idx = #{idx}
+    </update>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                code = '${code}'
+                and del_flag= 0
+                and (writer like '%'||'${keyword}'||'%'
+                or subject like '%'||'${keyword}'||'%'
+                or content like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where code = '${code}'
+                and del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

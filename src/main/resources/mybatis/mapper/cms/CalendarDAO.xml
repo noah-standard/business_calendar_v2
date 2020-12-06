@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.ICalendarDAO">
+    <insert id="writeCalendar" parameterType="com.end.demo.vo.join.CalendarMemberVO">
+        insert into cs_calendar
+        (idx,member_idx,name,s_date,e_date,type,content,state,del_flag,reg_date,reg_ip)
+        values (cs_calendar_seq.NEXTVAL,#{member_idx},#{name},#{s_date},#{e_date},#{type},#{content},#{state},0,#{reg_date},#{reg_ip})
+    </insert>
+    <select id="selectCalendarList" resultType="com.end.demo.vo.join.CalendarMemberVO">
+        <include refid="paging_header"/>
+        select rownum,cs_calendar.* from cs_calendar
+        <include refid="search"/>
+        <if test="list_order == '0'">
+            order by reg_date desc
+        </if>
+        <if test="list_order == '1'">
+            order by reg_date asc
+        </if>
+        <if test="list_order == ''">
+            order by reg_date desc
+        </if>
+        <include refid="paging_footer" />
+    </select>
+    <select id="selectCalendarListNotparameter" resultType="com.end.demo.vo.join.CalendarMemberVO">
+        select * from cs_calendar where del_flag = 0 and state != 2
+    </select>
+    <select id = "countCalendarData" resultType="int">
+        select count(*)
+        from cs_calendar
+        <include refid="search"></include>
+    </select>
+    <select id="getCalendar" parameterType="int" resultType="com.end.demo.vo.join.CalendarMemberVO">
+        select idx, member_idx,name, to_char(s_date,'YYYY-MM-DD') as s_date , type,content,state,del_flag,reg_date,reg_ip from cs_calendar where idx = #{idx}
+    </select>
+    <update id="editCalendar" parameterType="com.end.demo.vo.join.CalendarMemberVO">
+        update cs_calendar
+        set
+            name = #{name},
+            member_idx = #{member_idx},
+            s_date = #{s_date},
+            e_date = #{e_date},
+            type = #{type},
+            content = #{content}
+        where idx = #{idx}
+    </update>
+    <update id="updateState" parameterType="Hashmap">
+        update cs_calendar
+        set
+        state = #{state}
+        where idx = #{idx}
+    </update>
+    <update id="deleteCalendar" parameterType="HashMap">
+        update cs_calendar
+        set
+        del_flag = 1
+        where idx = #{idx}
+    </update>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                    del_flag= 0
+                    and (content like '%'||'${keyword}'||'%'
+                    or type like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

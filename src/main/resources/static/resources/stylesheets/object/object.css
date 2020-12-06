@@ -1,0 +1,41 @@
+*.object{
+    cursor: pointer;
+    user-select: none;
+    margin: 0 1rem;
+    display: inline-block;
+    border-radius: 1rem;
+}
+
+*.object.object-btn {
+    padding: 0.4rem 2rem;
+    font-size: 1.2rem;
+    color:#FFFFFF;
+    background-color: #47b6db;
+    border-radius: 1rem;
+    transition: background-color 500ms;
+}
+
+*.object.object-btn:hover {
+    background-color: #37a6cb ;
+}
+
+*.object.object-input{
+    background-color: #FFFFFF;
+    border : 0.1875rem solid #47b6db00;
+    width: auto;
+    height : auto;
+    padding: 0.45rem 0.1rem;
+    transition: border 500ms;
+    display: flex;
+    align-items: center;
+}
+
+*.object.object-input:focus{
+    border : 0.1875rem solid #47b6db;
+}
+
+*.object.object-checkbox {
+    width: 1.5rem;
+    height:1.5rem;
+    background-color: #FFFFFF;
+}

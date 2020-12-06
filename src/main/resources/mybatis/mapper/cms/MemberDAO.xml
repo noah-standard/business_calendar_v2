@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IMemberDAO">
+    <insert id="writeMember" parameterType="com.end.demo.vo.MemberVO">
+        insert into cs_member
+        (idx,userid,password,name,phone1,phone2,zip,addr1,addr2,del_flag,del_date,reg_date,reg_ip)
+        values (cs_member_seq.NEXTVAL,#{userid},#{password},#{name},#{phone1},#{phone2},#{zip},#{addr1},#{addr2},0,#{del_date},#{reg_date},#{reg_ip})
+    </insert>
+    <select id="selectMemberList" resultType="com.end.demo.vo.MemberVO">
+        <include refid="paging_header"/>
+        select rownum,cs_member.* from cs_member
+        <include refid="search"/>
+        <if test="list_order == '0'">
+            order by reg_date desc
+        </if>
+        <if test="list_order == '1'">
+            order by reg_date asc
+        </if>
+        <if test="list_order == ''">
+            order by reg_date desc
+        </if>
+        <include refid="paging_footer" />
+    </select>
+    <select id = "countMemberData" resultType="int">
+        select count(*)
+        from cs_member
+        <include refid="search"></include>
+    </select>
+    <select id="selectMemberLevelList" resultType="com.end.demo.vo.MemLevelVO">
+        select * from cs_mem
+    </select>
+    <select id="getMemberLevel" parameterType="String" resultType="com.end.demo.vo.MemLevelVO">
+        select * from cs_mem where mem_level = #{mem_level}
+    </select>
+    <select id="memberCheck" parameterType="String" resultType="int">
+        select count(*) from cs_member where userid = #{userid} and del_flag = 0
+    </select>
+    <select id="getMember" parameterType="int" resultType="com.end.demo.vo.MemberVO">
+        select * from cs_member where idx = #{idx}
+    </select>
+    <update id="editMember" parameterType="com.end.demo.vo.MemberVO">
+        update cs_member
+        set
+            userid = #{userid},
+            <if test="password != ''">
+            password = #{password},
+            </if>
+            mem_level = #{mem_level},
+            name = #{name},
+            phone1 = #{phone1},
+            phone2 = #{phone2},
+            zip = #{zip},
+            addr1 = #{addr1},
+            addr2 = #{addr2}
+        where idx = #{idx}
+    </update>
+    <delete id="deleteMember" parameterType="HashMap">
+        update cs_member
+        set
+        del_flag = 1,
+        del_date = #{del_date}
+        where idx = #{idx}
+    </delete>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                    del_flag= 0
+                    and (name like '%'||'${keyword}'||'%'
+                    or userid like '%'||'${keyword}'||'%'
+                    or addr1 like '%'||'${keyword}'||'%'
+                    or addr2 like '%'||'${keyword}'||'%'
+                    or zip like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

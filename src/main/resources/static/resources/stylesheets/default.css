@@ -1,0 +1,125 @@
+body > div.base {
+    position: relative;
+    width :100%;
+    height : 100%;
+}
+
+body > div.base > header.base-item.logo {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    user-select: none;
+}
+
+body > div.base > header.base-item.logo > div.logo-item:not(:last-child){
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+body > div.base > header.base-item.logo > div.logo-item.caption {
+    font-size: 3rem;
+    font-variant: small-caps;
+}
+
+body > div.base > header.base-item.logo > div.logo-item.description {
+    font-size: 1rem;
+}
+
+body > div.base > nav.base-item.nav{
+    margin-top: 2rem;
+    width: 100%;
+    height :2.4rem;
+    user-select: none;
+}
+
+body > div.base > nav.base-item.nav > div.nav-item.layout {
+    margin-top:0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body > div.base > nav.base-item.nav > div.nav-item.layout > div.layout-item {
+    font-size: 1rem;
+    padding: 0 1rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 1s;
+}
+
+body > div.base > nav.base-item.nav > div.nav-item.layout > div.layout-item:hover {
+    font-size: 2rem;
+    opacity: 1;
+}
+
+body > div.base > div.base-item.templates {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+body > div.base > footer.base-item.footer {
+    height : 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    user-select: none;
+}
+
+body > div.base > footer.base-item.footer > div.footer-item.copyright {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+body > div.base > div.base-item.login{
+    position: fixed;
+    top:0;
+    left: -100vw;
+    width: 100vw;
+    height : 100vh;
+    z-index: 100;
+    transition: transform 700ms;
+}
+
+body > div.base > div.base-item.login.active{
+    transform: translateX(100vw);
+}
+
+body > div.base > div.base-item.login > div.login-item.bg {
+    position: absolute;
+    width: 100%;
+    height : 100%;
+    background-color: #1a252fDD;
+}
+
+body > div.base > div.base-item.login > div.login-item.modal_box {
+    position: absolute;
+    width: 20rem;
+    height:20rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #2C3E50CC;
+    border-radius: 1rem;
+}
+
+body > div.base >div.base-item.login > div.login-item.modal_box > div.modal_box-item.caption {
+    font-size: 3rem;
+    color: #FFFFFF;
+    user-select: none;
+    margin-bottom: 1rem;
+}
+
+body > div.base >div.base-item.login > div.login-item.modal_box > form.modal_box-item.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

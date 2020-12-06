@@ -1,0 +1,40 @@
+body > div.base > div.base-item.templates > div.templates-item.indexPage{
+    position: relative;
+    height:100%;
+}
+
+body > div.base > div.base-item.templates > div.templates-item.indexPage > div.indexPage-item.bg {
+    position: absolute;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url("/static/resources/images/startup.jpg");
+    opacity: 0.3;
+}
+
+body > div.base > div.base-item.templates > div.templates-item.indexPage > div.indexPage-item.caption {
+    position: absolute;
+    color: #151e27;
+    top: 70%;
+    left: 5%;
+    font-size: 3rem;
+    user-select: none;
+}
+
+body > div.base > div.base-item.templates > div.templates-item.indexPage > div.indexPage-item.session {
+    position: absolute;
+    color: #151e27;
+    top: 35%;
+    right: 5%;
+    font-size: 3rem;
+    user-select: none;
+}
+
+body > div.base > div.base-item.templates > div.templates-item.indexPage > div.indexPage-item.content {
+    position: absolute;
+    color: #151e27;
+    top: 10%;
+    left: 5%;
+    font-size: 3rem;
+    user-select: none;
+}

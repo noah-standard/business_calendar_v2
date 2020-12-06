@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IAdminMenuDAO">
+    <insert id="insertAdminMenu" parameterType="HashMap">
+        <if test="cate == 0">
+        insert into cs_admin_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,del_flag,del_date,reg_date,reg_ip)
+        values(cs_admin_menu_seq.NEXTVAL,cs_admin_menu_seq.CURRVAL,0,cs_admin_menu_seq.CURRVAL,#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+        <if test="cate != 0">
+        insert into cs_admin_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,del_flag,del_date,reg_date,reg_ip)
+        values(cs_admin_menu_seq.NEXTVAL,#{cate},(SELECT ref_step+1 FROM CS_ADMIN_MENU WHERE idx = #{cate} ),(select * from (SELECT ref_level+1 FROM CS_ADMIN_MENU WHERE ref = #{cate} order by ref_level desc) where rownum <![CDATA[<]]>  2),#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+    </insert>
+    <select id="selectAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 order by ref_level asc ,ref desc, ref_step asc
+    </select>
+    <select id="selectAdminMenuOne" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 and state = 0 and ref = ${menu}  order by ref desc, ref_step asc, ref_level asc
+    </select>
+    <select id="selectOneAdminMenu" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 and idx = #{node}
+    </select>
+    <select id="adminMenuCount" parameterType="String" resultType="int">
+        select count(*) from cs_admin_menu where del_flag =0 and ref = #{menu}
+    </select>
+    <update id="updateAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO">
+        <if test='node_parent != "#"'>
+        update cs_admin_menu set
+            ref = ${node_parent},
+            ref_step = (select ref_step+1 from cs_admin_menu where idx = ${node_parent}),
+            ref_level = ${node_position}
+        where idx = ${node}
+        </if>
+        <if test='node_parent == "#"'>
+            <foreach collection="nodes_depth1" item = "item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+                update cs_admin_menu set
+                ref_level = ${index}
+                where idx = ${item}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="updateAdminMenuOne" parameterType="com.end.demo.vo.AdminMenuVO">
+        update cs_admin_menu set
+            name = #{name},
+            link = #{link},
+            state = #{state}
+        where idx = #{idx}
+    </update>
+    <update id="deleteAdminMenuOne" parameterType="String">
+        update cs_admin_menu set
+            del_flag = 1
+        where idx = #{idx}
+    </update>
+</mapper>

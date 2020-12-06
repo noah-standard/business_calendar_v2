@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IBBSManageDAO">
+    <insert id="insertBBSManage" parameterType="com.end.demo.vo.BBSManageVO">
+            insert into cs_bbs (IDX,name,code,bbs_type,bbs_pds,bbs_comment,bbs_read,bbs_write,bbs_modify,list_gallery,list_height,list_page,memo1,memo2,memo3,memo4,del_flag,reg_date)
+            values(cs_bbs_seq.NEXTVAL,#{name},#{code},#{bbs_type},#{bbs_pds},#{bbs_comment},#{bbs_read},#{bbs_write},#{bbs_modify},#{list_gallery},#{list_height},#{list_page},#{memo1},#{memo2},#{memo3},#{memo4},#{del_flag},#{reg_date})
+    </insert>
+    <select id="getRandomIdx" resultType="int">
+        select idx from cs_bbs_random
+    </select>
+    <select id="getTotalBBSManage" resultType="int">
+        select count(*) from cs_bbs where del_flag = 0
+    </select>
+    <select id="selectBBSManage" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where del_flag = 0
+    </select>
+    <select id="selectGroupBBSManage" resultType="HashMap">
+        select bbs_type, count(bbs_type) as cnt from cs_bbs where del_flag = 0 group by bbs_type
+    </select>
+    <update id="updateRandomIdx">
+        update cs_bbs_random set idx = idx + 1
+    </update>
+
+    <select id="selectOneAdminMenu" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from cs_admin_menu where del_flag =0 and idx = #{node}
+    </select>
+    <select id="getBBSManage" parameterType="String" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where idx = ${idx}
+    </select>
+    <select id="getBBSManageCode" parameterType="String" resultType="com.end.demo.vo.BBSManageVO">
+        select * from cs_bbs where code = '${code}'
+    </select>
+    <select id="getType" parameterType="String" resultType="String">
+        select bbs_type from cs_bbs where code = '${code}'
+    </select>
+    <update id="updateBBSManage" parameterType="com.end.demo.vo.BBSManageVO">
+        update cs_bbs set
+            bbs_type = '${bbs_type}',
+            name = '${name}',
+            bbs_write = '${bbs_write}',
+            bbs_read = '${bbs_read}',
+            bbs_modify = '${bbs_modify}',
+            list_height = '${list_height}',
+            list_page = '${list_page}'
+        where idx = ${idx}
+    </update>
+    <update id="deleteBBSManage" parameterType="String">
+        update cs_bbs set del_flag = 1 where idx = ${idx}
+    </update>
+</mapper>

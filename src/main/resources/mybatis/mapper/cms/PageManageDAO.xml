@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IPageManageDAO">
+    <insert id="insertUserMenu" parameterType="HashMap">
+        <selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
+            SELECT  cs_user_menu_seq.NEXTVAL FROM dual
+        </selectKey>
+        <if test="cate == 0">
+            insert into cs_user_menu (IDX,ref,ref_step,ref_level,name,link,menu_custom,menu_target,state,del_flag,del_date,reg_date,reg_ip)
+            values(${seq},${seq},0,${seq},#{name},#{link},'NULL',0,#{state},0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+        <if test="cate != 0">
+            insert into cs_user_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,state,del_flag,del_date,reg_date,reg_ip)
+            values(${seq},#{cate},(SELECT ref_step+1 FROM CS_USER_MENU WHERE idx = #{cate} ),(select * from (SELECT ref_level+1 FROM CS_USER_MENU WHERE ref = #{cate} order by ref_level desc) where rownum <![CDATA[<]]>  2),#{name},#{link},'NULL',0,0,#{state},SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
+        </if>
+    </insert>
+    <select id="selectUserMenu" resultType="com.end.demo.vo.UserMenuVO">
+        select * from cs_user_menu where del_flag = 0 and state = 0
+    </select>
+    <select id="getUserMenu" parameterType="String" resultType="com.end.demo.vo.UserMenuVO">
+        select * from cs_user_menu where del_flag =0 and idx = #{node}
+    </select>
+    <update id="updateUserMenu" parameterType="com.end.demo.vo.UserMenuVO">
+        <if test='node_parent != "#"'>
+            update cs_menu_menu set
+            ref = ${node_parent},
+            ref_step = (select ref_step+1 from cs_admin_menu where idx = ${node_parent}),
+            ref_level = ${node_position}
+            where idx = ${node}
+        </if>
+        <if test='node_parent == "#"'>
+            <foreach collection="nodes_depth1" item = "item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+                update cs_menu_menu set
+                ref_level = ${index}
+                where idx = ${item}
+            </foreach>
+        </if>
+    </update>
+    <update id="updateUserMenuOne" parameterType="com.end.demo.vo.UserMenuVO">
+        update cs_user_menu set
+            name = #{name},
+            link = #{link},
+            state = #{state}
+        where idx = #{idx}
+    </update>
+    <update id="deleteUserMenuOne" parameterType="int">
+        update cs_user_menu set
+            del_flag = 1
+        where idx = #{idx}
+    </update>
+</mapper>
