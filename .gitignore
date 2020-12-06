@@ -5,6 +5,12 @@ build/
 !**/src/main/**
 **/src/test/**
 
+
+### configure ###
+/src/main/resources/application.properties
+/src/main/resources/log4jdbc.log4j2.properties
+/src/main/resources/logback-spring.xml
+
 ### STS ###
 .apt_generated
 .classpath
