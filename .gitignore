@@ -7,9 +7,7 @@ build/
 
 
 ### configure ###
-/src/main/resources/application.properties
-/src/main/resources/log4jdbc.log4j2.properties
-/src/main/resources/logback-spring.xml
+application.properties
 
 ### STS ###
 .apt_generated
