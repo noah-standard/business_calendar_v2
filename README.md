@@ -1,18 +1,32 @@
-## business_calendar_v1(일정관리 프로그램)
+## business_calendar_v2(사내휴가 프로그램) -개발중-
 ### 개요 및 모듈
 
 #### - 개요 -
+##### 관리자 사용자화면 구분
+
+### 관리자 기능
 <ol>
-  <li>직원이 일정신청 (반차, 연차, 하계휴가, 출장, 외근)</li>
+  <li>직원이 일정신청 (반차,연차)</li>
   <li>관리자가 일정 검토 후 승인</li>
+  <li>사용자메뉴 관리기능</li>
+  <li>관리자메뉴 관리기능</li>
+  <li>게시판 관리기능</li>
+</ol>
+
+### 사용자 기능
+<ol>
+  <li>로그인 후 일정확인</li>
+  <li>마이페이지에서 사원정보 수정 및 일정신청조회</li>
+  <li>일정신청조회 승인 전 취소기능</li>
 </ol>
 
 #### - 모듈 -
 <ul>
   <li>스프링 부트(Spring Boot)
     <ul>
-      <li>스프링 시큐리티(Spring Security) - 관리자(admin), 직원(user) 세션 구분</li>
-      <li>MVC 패턴 Controller, Service, Repository 구분</li>
+      <li>스프링 시큐리티(Spring Security)를 통한 비밀번호 암호화</li>
+      <li>MVC 패턴 Controller, Service, Repository 적용</li>
+      <li>스프링 MVC 인터셉터로 로그인여부 확인</li>
     </ul>
   </li>
   <li>마이바티스(mybatis)
@@ -21,8 +35,9 @@
       <li>동적쿼리</li>
     </ul>
   </li>
-  <li>그래들(Gradle)</li>
+  <li>그래들(Gradle) CI</li>
   <li>FullCalendar API(JavaScript) - 달력 API</li>
+  <li>휴일 api를 통한 휴일 설정</li>
 </ul>
 
 ### - 테이블 소개 -
@@ -43,9 +58,7 @@
 ### - index 페이지 및 로그인 (index) -
 <p><img src="https://github.com/dirend7/business_calendar_v1/blob/master/image/index.jpg" alt="index" width="400px" height="200px"></img>&nbsp<img src="https://github.com/dirend7/business_calendar_v1/blob/master/image/login.jpg" alt="login" width="230px" height="200px"></p>
 <pre>
-로그인을 누르면 왼쪽에서 오른쪽으로 로그인화면이 나타남
-id : admin으로 관리자 세션 로그인
-id : user로 직원 세션 로그인
+모달창으로 로그인 요청
 </pre>
 
 ### - 일정 및 신청 (accept) -
