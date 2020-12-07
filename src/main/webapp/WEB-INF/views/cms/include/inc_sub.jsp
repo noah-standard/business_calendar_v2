@@ -9,6 +9,7 @@
             </c:if>
         </c:forEach>
     });
+
     function menu_chk(menu_idx){
         let xhr = new XMLHttpRequest();
         xhr.onload = function() {
@@ -19,7 +20,6 @@
             }
         };
         xhr.open('GET', '/cms/ajax/admin_config/home?menu='+menu_idx);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8'); // 컨텐츠타입을 json으로
         xhr.send(); // 요청 전송
     }
 </script>

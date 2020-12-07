@@ -3,10 +3,7 @@ package com.end.demo.controllor.cms.rest;
 import com.end.demo.service.cms.AdminMenuService;
 import com.end.demo.vo.AdminMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +16,7 @@ public class AdminMenuRestControllor {
     @Autowired
     AdminMenuService adminMenuService;
 
-    @RequestMapping(value = "menu")
+    @GetMapping("menu")
     public AdminMenuVO getAdminMenu(@RequestParam String node) {
         return  adminMenuService.selectOneAdminMenu(node);
     }
