@@ -5,32 +5,32 @@
         font-size: 18px;
     }
 </style>
-<form method="post" name="bbs_form" class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top">
+<form method="post" action="${action}" name="bbs_form" class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" onsubmit="return chk_form(this);">
     <input type="hidden" name="user_ok" value="no">
     <div class="uk-margin">
         <label class="uk-form-label" for="userid">아이디</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" id="userid" name="userid" type="text" value="${memberObject.userid}">
+            <input class="uk-input uk-width-1-5 __ck" title="아이디" id="userid" name="userid" type="text" value="${memberObject.userid}">
             <a href="javascript:userid_chk()" class="uk-button uk-button-default">중복확인</a>
         </div>
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="name">이름</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" id="name" name="name" type="text" value="${memberObject.name}">
+            <input class="uk-input uk-width-1-5 __ck" title="이름" id="name" name="name" type="text" value="${memberObject.name}">
         </div>
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="name">비밀번호</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" id="password" name="password" type="password" value="">
+            <input class="uk-input uk-width-1-5 __ck" title="비밀번호" id="password" name="password" type="password" value="">
         </div>
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="name">직급</label>
         <div class="uk-form-controls">
             <c:forEach var="item" items="${memberLevelList}">
-                <label class="uk-margin-small-right" for="level_${item.mem_level}"><input class="uk-radio uk-margin-small-right" id="level_${item.mem_level}" type="radio" name="mem_level" value="${item.mem_level}" ${item.mem_level eq memberObject.mem_level ? "checked" : ""}>${item.mem_name}</label>
+                <label class="uk-margin-small-right __ck" title="직급" for="level_${item.mem_level}"><input class="uk-radio uk-margin-small-right" id="level_${item.mem_level}" type="radio" name="mem_level" value="${item.mem_level}" ${item.mem_level eq memberObject.mem_level ? "checked" : ""}>${item.mem_name}</label>
             </c:forEach>
         </div>
     </div>

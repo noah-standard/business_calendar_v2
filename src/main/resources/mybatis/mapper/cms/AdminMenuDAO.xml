@@ -13,6 +13,9 @@
         values(cs_admin_menu_seq.NEXTVAL,#{cate},(SELECT ref_step+1 FROM CS_ADMIN_MENU WHERE idx = #{cate} ),(select * from (SELECT ref_level+1 FROM CS_ADMIN_MENU WHERE ref = #{cate} order by ref_level desc) where rownum <![CDATA[<]]>  2),#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
         </if>
     </insert>
+    <select id="selectAdminMasterMenu" resultType="com.end.demo.vo.AdminMenuVO">
+        select * from CS_ADMIN_MENU where del_flag = 0 and ref_step =0 order by ref_level asc
+    </select>
     <select id="selectAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO" resultType="com.end.demo.vo.AdminMenuVO">
         select * from cs_admin_menu where del_flag =0 order by ref_level asc ,ref desc, ref_step asc
     </select>
@@ -24,6 +27,9 @@
     </select>
     <select id="adminMenuCount" parameterType="String" resultType="int">
         select count(*) from cs_admin_menu where del_flag =0 and ref = #{menu}
+    </select>
+    <select id="getTitleMenu" parameterType="String" resultType="String">
+        select name from cs_admin_menu where del_flag =0 and state = 0 and link like '%'||#{code}
     </select>
     <update id="updateAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO">
         <if test='node_parent != "#"'>

@@ -6,10 +6,12 @@ import com.end.demo.vo.AdminVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/cms")
@@ -27,7 +29,7 @@ public class AdminLoginControllor {
     }
 
     @PostMapping("admin_login")
-    public String cmsLoginProcess(HttpSession session,@ModelAttribute AdminVO adminVO) {
+    public String cmsLoginProcess(HttpSession session, @Valid @ModelAttribute AdminVO adminVO, BindingResult bindingResult) {
         AdminVO chkAdminVO = adminLoginService.getAdmin(adminVO.getUserid());
 
         if (session != null && chkAdminVO != null) {
@@ -38,7 +40,6 @@ public class AdminLoginControllor {
                 return "redirect:calendar/list";
             }
         }
-
         return "cms/admin_login";
     }
 

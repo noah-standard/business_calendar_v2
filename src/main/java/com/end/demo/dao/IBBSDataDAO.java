@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface IBBSDataDAO {
-    public BBSDataVO getBBSData(int idx);
+    BBSDataVO getBBSData(int idx);
+    int getBBSCnt(String code);
 }

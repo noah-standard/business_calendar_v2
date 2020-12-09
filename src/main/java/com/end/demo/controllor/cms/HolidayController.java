@@ -11,10 +11,12 @@ import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.WebSession;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class HolidayController {
     @ModelAttribute
     public void pageInfo(Model model){
         model.addAttribute("page", "holiday");
-        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("menuList",adminMenuService.selectAdminMasterMenu());
     }
 
     @GetMapping("/list")
@@ -73,7 +75,10 @@ public class HolidayController {
     }
 
     @PostMapping("/write.do")
-    public String holidayWriteProcess(@ModelAttribute HolidayVO holidayVO) {
+    public String holidayWriteProcess(@Valid @ModelAttribute HolidayVO holidayVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:write";
+        }
         holidayService.writeHoliday(holidayVO);
         return "redirect:list";
     }
@@ -87,7 +92,10 @@ public class HolidayController {
     }
 
     @PostMapping("/edit.do")
-    public String holidayEditProcess(@ModelAttribute HolidayVO holidayVO) {
+    public String holidayEditProcess(@Valid @ModelAttribute HolidayVO holidayVO,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:edit";
+        }
         holidayService.editHoliday(holidayVO);
         return "redirect:list";
     }

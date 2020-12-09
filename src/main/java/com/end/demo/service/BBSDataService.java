@@ -12,4 +12,5 @@ public class BBSDataService {
     IBBSDataDAO dao;
 
     public BBSDataVO getBBSData(int idx){ return dao.getBBSData(idx);}
+    public int getBBSCnt(String code){ return dao.getBBSCnt(code);}
 }

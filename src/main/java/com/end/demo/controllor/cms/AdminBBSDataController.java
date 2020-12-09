@@ -32,7 +32,7 @@ public class AdminBBSDataController {
 
     @ModelAttribute
     public void pageInfo(Model model){
-        model.addAttribute("menuList", adminMenuService.selectAdminMenu());
+        model.addAttribute("menuList", adminMenuService.selectAdminMasterMenu());
         model.addAttribute("page", "bbs");
     }
 
@@ -106,7 +106,10 @@ public class AdminBBSDataController {
     }
 
     @PostMapping("write.do")
-    public String BBSDataWriteProcess(@Valid BBSDataVO bbsVO, BindingResult bindingResult) {
+    public String BBSDataWriteProcess(@Valid @ModelAttribute BBSDataVO bbsVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:write";
+        }
         adminBbsDataService.insertBBSData(bbsVO);
         return "redirect:list?code=" + bbsVO.getCode();
     }
@@ -125,7 +128,10 @@ public class AdminBBSDataController {
     }
 
     @PostMapping("edit.do")
-    public String BBSDataEditProcess(BBSDataVO bbsVO) {
+    public String BBSDataEditProcess(@Valid @ModelAttribute BBSDataVO bbsVO,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:edit";
+        }
         adminBbsDataService.updateBBSData(bbsVO);
         return "redirect:list?code=" + bbsVO.getCode();
     }

@@ -36,6 +36,9 @@
         </if>
         <include refid="paging_footer"/>
     </select>
+    <select id="getBBSCnt" resultType="int">
+        select count(*) from cs_bbs_data where del_flag=0
+    </select>
     <select id="getBBSData" parameterType="long" resultType="com.end.demo.vo.BBSDataVO">
         select * from cs_bbs_data where idx = #{idx}
     </select>

@@ -17,5 +17,6 @@ public interface IAdminBBSDataDAO {
     public BBSDataVO getBBSData(long idx);
     public void updateBBSDataReadCnt(long idx);
     public void deleteBBSData(long idx);
+    int getBBSCnt();
 
 }

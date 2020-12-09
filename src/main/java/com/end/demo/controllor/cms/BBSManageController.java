@@ -1,12 +1,17 @@
 package com.end.demo.controllor.cms;
 
+import com.end.demo.service.BBSDataService;
+import com.end.demo.service.cms.AdminBBSDataService;
 import com.end.demo.service.cms.BBSManageService;
 import com.end.demo.vo.BBSManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/cms/bbs_manage")
@@ -14,6 +19,9 @@ public class BBSManageController {
 
     @Autowired
     BBSManageService bbsManageService;
+
+    @Autowired
+    AdminBBSDataService adminBBSDataService;
 
     @ModelAttribute
     public void pageInfo(Model model){
@@ -25,6 +33,7 @@ public class BBSManageController {
     public String BBSManageList(@RequestParam(required = false) String mode,Model model) {
         model.addAttribute("page", "bbs_manage");
         model.addAttribute("totalBBS",bbsManageService.getTotalBBSManage());
+        model.addAttribute("BBSCnt",adminBBSDataService.getBBSCnt());
         model.addAttribute("BBSManageGroupList",bbsManageService.selectGroupBBSManage());
         return "cms/template";
     }
@@ -37,7 +46,10 @@ public class BBSManageController {
     }
 
     @PostMapping("write.do")
-    public String BBSManageWriteProcess(@ModelAttribute BBSManageVO bbsManageVO) {
+    public String BBSManageWriteProcess(@Valid @ModelAttribute BBSManageVO bbsManageVO,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:write";
+        }
         bbsManageService.insertBBSManage(bbsManageVO);
         return "redirect:cms/bbs_manage";
     }
@@ -51,7 +63,10 @@ public class BBSManageController {
     }
 
     @PostMapping("edit.do")
-    public String BBSManageEditProcess(BBSManageVO bbsManageVO) {
+    public String BBSManageEditProcess(@Valid @ModelAttribute BBSManageVO bbsManageVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:edit";
+        }
         bbsManageService.updateBBSManage(bbsManageVO);
         return "redirect:cms/bbs_manage";
     }

@@ -114,7 +114,7 @@
     <div class="uk-margin">
         <label class="uk-form-label" for="content">내용</label>
         <div class="uk-form-controls">
-            <textarea class="uk-textarea __ck" title="내용" name="content" id="content" cols="30" rows="10">${calendarObject.content}</textarea>
+            <textarea class="uk-textarea" title="내용" name="content" id="content" cols="30" rows="10">${calendarObject.content}</textarea>
         </div>
     </div>
     <p class="uk-text-center">

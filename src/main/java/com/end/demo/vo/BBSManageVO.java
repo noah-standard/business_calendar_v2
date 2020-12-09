@@ -2,9 +2,14 @@ package com.end.demo.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Data
 public class BBSManageVO {
     private long idx;
+    @NotBlank
     private String name;
     private String code;
     private String bbs_type;
@@ -14,7 +19,9 @@ public class BBSManageVO {
     private String bbs_write;
     private String bbs_modify;
     private int list_gallery;
+    @Min(0)
     private int list_height;
+    @Min(0)
     private int list_page;
     private String memo1;
     private String memo2;

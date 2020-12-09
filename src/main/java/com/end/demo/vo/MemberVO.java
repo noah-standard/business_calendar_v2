@@ -2,13 +2,19 @@ package com.end.demo.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class MemberVO {
     private String rn;
     private String idx;
+    @NotBlank
     private String userid;
+    @NotBlank
     private String name;
+    @NotBlank
     private String password;
+    @NotBlank
     private String mem_level;
     private String phone1;
     private String phone2;

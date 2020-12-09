@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <h3 class="uk-heading-divider uk-padding-small">게시판관리</h3>
 <h4 class="uk-margin-medium-left uk-margin-remove-top uk-margin-remove-bottom">게시판 ${bbsObject.idx ne null ? "수정" : "등록"}</h4>
-<form method="post" action="${action}" class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top">
+<form method="post" action="${action}" class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" onsubmit="return chk_form(this); ">
     <div class="uk-margin">
         <label class="uk-form-label" for="form-horizontal-select">게시판타입</label>
         <div class="uk-form-controls">
@@ -21,19 +21,19 @@
     <div class="uk-margin">
         <label class="uk-form-label" for="form-horizontal-text">게시판이름</label>
         <div class="uk-form-controls">
-            <input class="uk-input" name="name" id="form-horizontal-text" type="text" value="${bbsObject.name ne null ? bbsObject.name : ""}">
+            <input class="uk-input __ck" title="게시판이름" name="name" id="form-horizontal-text" type="text" value="${bbsObject.name ne null ? bbsObject.name : ""}">
         </div>
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="form-horizontal-text">페이지갯수</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" name="list_page" type="text" value="${bbsObject.list_page ne null ? bbsObject.list_page : "10"}">
+            <input class="uk-input uk-width-1-5 __ck" title="페이지갯수" name="list_page" type="text" value="${bbsObject.list_page ne null ? bbsObject.list_page : "10"}">
         </div>
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="form-horizontal-text">리스트갯수</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" name="list_height" type="text" value="${bbsObject.list_height ne null ? bbsObject.list_height : "10"}">
+            <input class="uk-input uk-width-1-5 __ck" title="리스트갯수" name="list_height" type="text" value="${bbsObject.list_height ne null ? bbsObject.list_height : "10"}">
         </div>
     </div>
     <div class="uk-margin">

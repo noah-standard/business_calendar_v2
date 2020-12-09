@@ -10,8 +10,10 @@ import com.end.demo.vo.join.MemberMemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +32,11 @@ public class MemberController {
     @ModelAttribute
     public void pageInfo(Model model){
         model.addAttribute("page", "member");
-        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("menuList",adminMenuService.selectAdminMasterMenu());
     }
 
     @GetMapping("/list")
-    public String memberList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
+    public String memberList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model,BindingResult bindingResult) {
         // 레코드 갯수 계산
         int count = memberService.countMemberData(bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword());
         // mst_bbs 페이지블록 및 목록수
@@ -94,7 +96,10 @@ public class MemberController {
     }
 
     @PostMapping("/write.do")
-    public String memberWriteProcess(@ModelAttribute MemberVO memberVO) {
+    public String memberWriteProcess(@Valid @ModelAttribute MemberVO memberVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:write";
+        }
         memberService.writeMember(memberVO);
         return "redirect:list";
     }
@@ -110,7 +115,10 @@ public class MemberController {
     }
 
     @PostMapping("/edit.do")
-    public String memberEditProcess(@ModelAttribute MemberVO memberVO) {
+    public String memberEditProcess(@Valid @ModelAttribute MemberVO memberVO,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:edit";
+        }
         memberService.editMember(memberVO);
         return "redirect:list.do";
     }

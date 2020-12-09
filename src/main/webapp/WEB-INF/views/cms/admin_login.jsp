@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 <head>
     <%@include file="./include/inc_head.jsp" %>
@@ -29,6 +31,15 @@
             <div class="uk-margin">
                 <input class="uk-input" type="password" name="password" placeholder="password">
             </div>
+
+            <spring:hasBindErrors name="adminVO">
+                <c:if test="${errors.hasFieldErrors('userid') ||errors.hasFieldErrors('password')}">
+                    <div class="uk-alert-danger"  uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>${errors.getFieldError( 'userid' ).defaultMessage }</p>
+                    </div>
+                </c:if>
+            </spring:hasBindErrors>
 
         </fieldset>
         <p class="uk-text-right" uk-margin>

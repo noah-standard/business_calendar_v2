@@ -28,6 +28,6 @@ public class AdminBBSDataService {
     public void updateBBSDataReadCnt(long idx){dao.updateBBSDataReadCnt(idx);}
     public void deleteBBSData(long idx){dao.deleteBBSData(idx);}
     public void updateBBSData(BBSDataVO bbsVO){dao.updateBBSData(bbsVO);}
-
+    public int getBBSCnt(){return dao.getBBSCnt();}
 
 }

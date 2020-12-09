@@ -51,6 +51,10 @@ public class CalendarService {
         dao.editCalendar(calendarMemberVO);
     }
 
+    public int getVacationTotal(){return dao.getVacationTotal();}
+    public int getVacationApplyTotal(){return dao.getVacationApplyTotal();}
+    public int getVacationDisappear(){return dao.getVacationDisappear();}
+
     public void deleteCalendar(int idx){
         dao.deleteCalendar(idx);
     }

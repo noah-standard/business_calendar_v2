@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class CalendarController {
     @ModelAttribute
     public void pageInfo(Model model){
         model.addAttribute("page", "calendar");
-        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("menuList",adminMenuService.selectAdminMasterMenu());
     }
 
     @GetMapping("/list")
@@ -83,6 +84,9 @@ public class CalendarController {
         }
 
         // 보낼 객체
+        model.addAttribute("vacationTotal",calendarService.getVacationTotal());
+        model.addAttribute("vacationApplyTotal",calendarService.getVacationApplyTotal());
+        model.addAttribute("vacationPredictDisapper",calendarService.getVacationDisappear());
         model.addAttribute("calendarMemberList", calendarMemberVOS);
         model.addAttribute("listCount", count);
         model.addAttribute("search_order", search_order);
@@ -103,7 +107,10 @@ public class CalendarController {
     }
 
     @PostMapping("/write.do")
-    public String calendarWriteProcess(@ModelAttribute CalendarMemberVO calendarMemberVO, BindingResult bindingResult) {
+    public String calendarWriteProcess(@Valid @ModelAttribute CalendarMemberVO calendarMemberVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:write";
+        }
         calendarService.writeCalendar(calendarMemberVO);
         return "redirect:list";
     }
@@ -118,7 +125,10 @@ public class CalendarController {
     }
 
     @PostMapping("/edit.do")
-    public String calendarEditProcess(@ModelAttribute CalendarMemberVO calendarMemberVO) {
+    public String calendarEditProcess(@Valid @ModelAttribute CalendarMemberVO calendarMemberVO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:edit";
+        }
         calendarService.editCalendar(calendarMemberVO);
         return "redirect:list";
     }

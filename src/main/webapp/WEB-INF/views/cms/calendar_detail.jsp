@@ -47,56 +47,6 @@
     });
 
 </script>
-<div class="uk-card uk-card-default uk-flex uk-margin-medium-left uk-margin-medium-right uk-padding-small uk-margin">
-    <div class="uk-card uk-card-primary uk-padding uk-width-1-4 uk-text-center uk-margin-right">
-        <h3 class="uk-margin-remove-top">총 휴가</h3>
-        <span>1 개</span>
-    </div>
-    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center uk-margin-right">
-        <h3 class="uk-margin-remove-top">사용일</h3>
-        <span>1 개</span>
-    </div>
-    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center uk-margin-right">
-        <h3 class="uk-margin-remove-top">남은휴가</h3>
-        <span>1 개</span>
-    </div>
-    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center ">
-        <h3 class="uk-margin-remove-top">소멸휴가일수</h3>
-        <span>1 개</span>
-    </div>
-</div>
-<div class="uk-margin-small-top uk-margin-small-bottom uk-margin-medium-left uk-flex">
-    <select id="search_order" class="uk-select uk-width-1-6" onchange="search_order()">
-        <option value="all" selected>전체검색</option>
-        <option value="subject">제목</option>
-        <option value="writer">작성자</option>
-        <option value="content">내용</option>
-    </select>
-    <form class="uk-search uk-search-default">
-        <input type="hidden" name="search_order">
-        <input type="hidden" name="list_order" value="${param.list_order}">
-        <input type="hidden" name="list_scale" value="${param.list_scale}">
-        <input type="hidden" name="code" value="${mst_bbs.code}">
-        <span class="uk-margin-small-left" uk-search-icon></span>
-        <input class="uk-search-input uk-margin-small-left" type="search" name="keyword" placeholder="">
-    </form>
-</div>
-<div class="uk-flex uk-width-1-1 uk-flex-between uk-flex-middle uk-margin-small-top uk-margin-small-bottom">
-    <div class="uk-margin-medium-left ">
-        총 ${listCount}개의 일정이 있습니다.
-    </div>
-    <div class="uk-text-right uk-flex  uk-width-1-4 uk-margin-medium-right">
-        <select class="uk-select" id="list_order" onchange="list_order()">
-            <option value="0" ${param.list_order eq 0 ? 'selected' : list_order eq '' ? 'selected' : ''}>최근등록순</option>
-            <option value="1" ${param.list_order eq 1 ? 'selected' : ''}>과거등록순</option>
-        </select>
-        <select class="uk-select uk-margin-small-left" id="list_scale" onchange="list_scale()">
-            <option value="10" ${param.list_scale eq '10' ? 'selected' : list_scale eq '' ? 'selected' : '' }>10개식</option>
-            <option value="20" ${param.list_scale eq '20' ? 'selected' : ''}>20개식</option>
-            <option value="50" ${param.list_scale eq '50' ? 'selected' : ''}>50개식</option>
-        </select>
-    </div>
-</div>
 <div class="uk-flex uk-flex-column uk-margin-medium-left uk-margin-medium-right">
     <table class="uk-table uk-table-hover uk-table-divider uk-table-small uk-table-middle">
         <thead>

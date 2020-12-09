@@ -14,6 +14,7 @@ import java.util.List;
 public interface IAdminMenuDAO {
 
     public void insertAdminMenu(PageManageVO pageManageVO);
+    public List<AdminMenuVO> selectAdminMasterMenu();
     public List<AdminMenuVO> selectAdminMenu();
     public List<AdminMenuVO> selectAdminMenuOne(String menu);
     public void updateAdminMenu(AdminMenuVO adminMenuVO);
@@ -21,4 +22,5 @@ public interface IAdminMenuDAO {
     public void updateAdminMenuOne(AdminMenuVO adminMenuVO);
     public void deleteAdminMenuOne(String idx);
     public int adminMenuCount(String menu);
+    public String getTitleMenu(String code);
 }

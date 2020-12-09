@@ -24,6 +24,7 @@ public class AdminMenuService {
     IAdminMenuDAO dao;
 
     public void insertAdminMenu(PageManageVO pageManageVO){dao.insertAdminMenu(pageManageVO);}
+    public List<AdminMenuVO> selectAdminMasterMenu(){return dao.selectAdminMasterMenu();}
     public List<AdminMenuVO> selectAdminMenu(){return dao.selectAdminMenu();}
     public List<AdminMenuVO> selectAdminMenuOne(String menu){return dao.selectAdminMenuOne(menu);}
     public AdminMenuVO selectOneAdminMenu(String node){return dao.selectOneAdminMenu(node);}
@@ -31,6 +32,7 @@ public class AdminMenuService {
     public void updateAdminMenuOne(AdminMenuVO adminMenuVO){dao.updateAdminMenuOne(adminMenuVO);}
     public void deleteAdminMenuOne(String idx){dao.deleteAdminMenuOne(idx);}
     public int adminMenuCount(String menu){return dao.adminMenuCount(menu);}
+    public String getTitleMenu(String code){return dao.getTitleMenu(code);}
 
 
 }
