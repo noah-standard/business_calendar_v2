@@ -3,11 +3,9 @@ package com.end.demo.controllor.cms.rest;
 import com.end.demo.service.cms.AdminMenuService;
 import com.end.demo.vo.AdminMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/cms/ajax/admin_config")
@@ -21,25 +19,29 @@ public class AdminMenuRestControllor {
         return  adminMenuService.selectOneAdminMenu(node);
     }
 
-    @RequestMapping(value = "menu",method = RequestMethod.POST)
-    public void updateAdminMenuOne(HttpServletResponse response, AdminMenuVO adminMenuVO) throws IOException {
+    @PostMapping("menu")
+    public ModelAndView updateAdminMenuOne(@ModelAttribute AdminMenuVO adminMenuVO) {
+        ModelAndView modelAndView = new ModelAndView();
         adminMenuService.updateAdminMenuOne(adminMenuVO);
-        response.sendRedirect("/cms/admin_config/menu");
+        modelAndView.setViewName("redirect:/cms/admin_config/menu");
+        return modelAndView;
     }
 
-    @RequestMapping(value = "menu/delete")
-    public void deleteAdminMenuOne(HttpServletResponse response, @RequestParam String idx) throws IOException {
+    @GetMapping("menu/delete")
+    public ModelAndView deleteAdminMenuOne(@RequestParam String idx){
+        ModelAndView modelAndView = new ModelAndView();
         adminMenuService.deleteAdminMenuOne(idx);
-        response.sendRedirect("/cms/admin_config/menu");
+        modelAndView.setViewName("redirect:/cms/admin_config/menu");
+        return modelAndView;
     }
 
-    @RequestMapping(value = "home")
-    public ModelAndView adminMenuAjax(@RequestParam String menu){
+    @GetMapping("home")
+    public ModelAndView adminMenuAjax(@RequestParam String menu, Model model){
+        ModelAndView modelAndView = new ModelAndView();
         int adminMenuCnt = adminMenuService.adminMenuCount(menu);
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("menuList", adminMenuService.selectAdminMenuOne(menu));
-        mv.addObject("menu_cnt", adminMenuCnt);
-        mv.setViewName("/cms/menu_ajax");
-        return mv;
+        modelAndView.addObject("menuList", adminMenuService.selectAdminMenuOne(menu));
+        modelAndView.addObject("menu_cnt", adminMenuCnt);
+        modelAndView.setViewName("/cms/menu_ajax");
+        return modelAndView;
     }
 }

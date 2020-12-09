@@ -20,7 +20,7 @@ public interface ICalendarDAO {
     public int countCalendarData(String search_order,String keyword);
     public CalendarMemberVO getCalendar(int idx);
     public void editCalendar(CalendarMemberVO calendarMemberVO);
-    public void deleteCalendar(HashMap<String, Object> delData);
+    public void deleteCalendar(int idx);
     public void writeCalendar(CalendarMemberVO calendarMemberVO);
     public void updateState(HashMap<String,Integer> query);
 }

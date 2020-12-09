@@ -10,6 +10,7 @@ import com.end.demo.vo.XhrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,40 +38,32 @@ public class UserController {
     @Autowired
     CalendarService calendarService;
 
-    @RequestMapping(value = "")
-    public ModelAndView getIndex(HttpSession session) {
-        ModelAndView mv = new ModelAndView();
-        /*if (session != null) {
-//            session.setAttribute("loginCheck",true);
-//            session.setAttribute("id",true);
-        }*/
+    @GetMapping("")
+    public String getIndex(Model model) {
         System.out.println(pageManageService.selectUserMenu());
-        mv.addObject("holidayList", c_service.getHoliday());
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("userVacationList",calendarService.selectCalendarList());
-        mv.addObject("page", "fragments/indexPage");//html templates
-        mv.addObject("templates", "indexPage");//css
-        mv.addObject("pageTitle", "index");
-        mv.setViewName("index");
-        return mv;
+        model.addAttribute("holidayList", c_service.getHoliday());
+        model.addAttribute("userMenuList",pageManageService.selectUserMenu());
+        model.addAttribute("userVacationList",calendarService.selectCalendarList());
+        model.addAttribute("page", "fragments/indexPage");//html templates
+        model.addAttribute("templates", "indexPage");//css
+        model.addAttribute("pageTitle", "index");
+        return "index";
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ModelAndView getUser(HttpSession session, @RequestParam String userid, @RequestParam String password) {
+    @PostMapping("")
+    public String getUser(HttpSession session, @ModelAttribute UserVO userVO) {
         ModelAndView mv = new ModelAndView();
-        UserVO userVO = service.getUser(userid);
+        UserVO requestUserVO = service.getUser(userVO.getUserid());
 
         if (session != null && userVO != null) {
-            boolean matchPw = passwordEncoder.matches(password,userVO.getPassword());
+            boolean matchPw = passwordEncoder.matches(requestUserVO.getPassword(),userVO.getPassword());
             System.out.println(matchPw);
             if (matchPw) {
                 session.setAttribute("loginCheck", true);
                 session.setAttribute("userid", userVO.getUserid());
             }
         }
-
-        mv.setViewName("redirect:");
-        return mv;
+        return "redirect:";
     }
 
 

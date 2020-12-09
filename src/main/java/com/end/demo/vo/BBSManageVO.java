@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class BBSManageVO {
-    private String idx;
+    private long idx;
     private String name;
     private String code;
     private String bbs_type;
@@ -13,9 +13,9 @@ public class BBSManageVO {
     private String bbs_read;
     private String bbs_write;
     private String bbs_modify;
-    private String list_gallery;
-    private String list_height;
-    private String list_page;
+    private int list_gallery;
+    private int list_height;
+    private int list_page;
     private String memo1;
     private String memo2;
     private String memo3;

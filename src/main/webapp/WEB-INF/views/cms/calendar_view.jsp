@@ -15,11 +15,11 @@
     <div class="">${calendarObject.content}</div>
 </div>
     <div class="uk-float-left">
-        <a href="./edit.do?idx=${calendarObject.idx}" class="uk-button uk-button-default">수정</a>
+        <a href="./edit?idx=${calendarObject.idx}" class="uk-button uk-button-default">수정</a>
         <a href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${calendarObject.idx}','삭제')" class="uk-button uk-button-default">삭제</a>
     </div>
     <div class="uk-float-right">
         <a href="javascript:history.back()" class="uk-button uk-button-default">취소</a>
-        <a href="./write.do" class="uk-button uk-button-primary">등록</a>
+        <a href="./write" class="uk-button uk-button-primary">등록</a>
     </div>
 </div>

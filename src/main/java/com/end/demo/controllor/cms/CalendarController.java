@@ -9,11 +9,12 @@ import com.end.demo.service.cms.MemberService;
 import com.end.demo.vo.CalendarVO;
 import com.end.demo.vo.MemberVO;
 import com.end.demo.vo.join.CalendarMemberVO;
+import com.end.demo.vo.param.BBSPagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -34,15 +35,18 @@ public class CalendarController {
     @Autowired
     AdminMenuService adminMenuService;
 
-    @RequestMapping("/list.do")
-    public ModelAndView calendarList(@RequestParam(defaultValue = "1") int curPage
-                                ,@RequestParam(defaultValue = "all") String search_order
-                                ,@RequestParam(defaultValue = "") String keyword
-                                ,@RequestParam(required = false) String idx
-                                ,@RequestParam(defaultValue = "0") int list_scale
-                                ,@RequestParam(defaultValue = "0") int list_order) {
+    @ModelAttribute
+    public void pageInfo(Model model){
+        model.addAttribute("page", "calendar");
+        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+    }
 
-        ModelAndView mv = new ModelAndView();
+    @GetMapping("/list")
+    public String calendarList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
+        String search_order = bbsPagerVO.getSearch_order();
+        String keyword = bbsPagerVO.getKeyword();
+        int curPage = bbsPagerVO.getCurPage();
+        int list_order = bbsPagerVO.getList_order();
 
         // 레코드 갯수 계산
         int count = calendarService.countCalendarData(search_order, keyword);
@@ -79,79 +83,58 @@ public class CalendarController {
         }
 
         // 보낼 객체
-        mv.addObject("calendarMemberList", calendarMemberVOS);
-        mv.addObject("listCount", count);
-        mv.addObject("search_order", search_order);
-        mv.addObject("keyword", keyword);
-        mv.addObject("pager", pager);
-        mv.addObject("page", "calendar");
-        mv.addObject("calendar_template","calendar_list");
-        mv.addObject("mode", "목록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("calendarMemberList", calendarMemberVOS);
+        model.addAttribute("listCount", count);
+        model.addAttribute("search_order", search_order);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("pager", pager);
+        model.addAttribute("calendar_template","calendar_list");
+        model.addAttribute("mode", "목록");
 
-        mv.setViewName("cms/template");
-        return mv;
+        return "cms/template";
     }
 
-    @RequestMapping("/write.do")
-    public ModelAndView calendarWrite() {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("page", "calendar");
-        mv.addObject("calendar_template","calendar_write");
-        mv.addObject("mode", "등록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/write")
+    public String calendarWrite(Model model) {
+        model.addAttribute("calendar_template","calendar_write");
+        model.addAttribute("action","write.do");
+        model.addAttribute("mode", "등록");
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/write.do",method = RequestMethod.POST)
-    public String calendarWriteProcess(CalendarMemberVO calendarMemberVO) {
+    @PostMapping("/write.do")
+    public String calendarWriteProcess(@ModelAttribute CalendarMemberVO calendarMemberVO, BindingResult bindingResult) {
         calendarService.writeCalendar(calendarMemberVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
-    @RequestMapping("/edit.do")
-    public ModelAndView calendarEdit(@RequestParam int idx) {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("page", "calendar");
-        mv.addObject("calendar_template","calendar_write");
-        mv.addObject("mode", "수정");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-        mv.addObject("calendarObject",calendarService.getCalendar(idx));
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/edit")
+    public String calendarEdit(@RequestParam int idx,Model model) {
+        model.addAttribute("calendar_template","calendar_write");
+        model.addAttribute("action","edit.do");
+        model.addAttribute("mode", "수정");
+        model.addAttribute("calendarObject",calendarService.getCalendar(idx));
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/edit.do",method = RequestMethod.POST)
-    public String calendarEditProcess(CalendarMemberVO calendarMemberVO) {
+    @PostMapping("/edit.do")
+    public String calendarEditProcess(@ModelAttribute CalendarMemberVO calendarMemberVO) {
         calendarService.editCalendar(calendarMemberVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
-    @RequestMapping("/delete.do")
+    @GetMapping("/delete.do")
     public String calendarDelete(@RequestParam int idx) {
-        HashMap<String, Object> delData = new HashMap<>();
-        delData.put("idx",idx);
-        calendarService.deleteCalendar(delData);
-        return "redirect:list.do";
+        calendarService.deleteCalendar(idx);
+        return "redirect:list";
     }
 
-    @RequestMapping("/view.do")
-    public ModelAndView calendarView(@RequestParam int idx) {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("calendarObject",calendarService.getCalendar(idx));
-        mv.addObject("page", "calendar");
-        mv.addObject("calendar_template","calendar_view");
-        mv.addObject("mode", "상세보기");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/view")
+    public String calendarView(@RequestParam int idx,Model model) {
+        model.addAttribute("calendarObject",calendarService.getCalendar(idx));
+        model.addAttribute("calendar_template","calendar_view");
+        model.addAttribute("mode", "상세보기");
+        return "cms/template";
     }
 
 }

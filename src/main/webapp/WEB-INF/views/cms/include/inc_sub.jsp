@@ -26,7 +26,7 @@
 <nav class="top-nav">
     <div class="fixed-menu">
         <ul class="uk-iconnav uk-iconnav-vertical">
-            <li><a href="${path}/calendar/list.do" class=" uk-align-center uk-text-center" uk-icon="icon: home;ratio:1.8"></a></li>
+            <li><a href="${path}/calendar/list" class=" uk-align-center uk-text-center" uk-icon="icon: home;ratio:1.8"></a></li>
             <li><a href="${path}/bbs_manage" class=" uk-align-center uk-text-center" uk-icon="icon: menu;ratio:1.8"></a></li>
             <li><a href="${path}/admin_config/menu" class=" uk-align-center uk-text-center" uk-icon="icon: cog;ratio:1.8"></a></li>
         </ul>

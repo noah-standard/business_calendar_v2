@@ -7,16 +7,15 @@
 <nav class="top-nav">
     <div class="fixed-menu">
         <ul class="uk-iconnav uk-iconnav-vertical">
-            <li><a href="#" class="uk-align-center uk-text-center" uk-icon="icon: plus; ratio: 1.8"></a></li>
-            <li><a href="#" class="uk-align-center uk-text-center" uk-icon="icon: file-edit; ratio: 1.8"></a></li>
-            <li><a href="#" class="uk-align-center uk-text-center" uk-icon="icon: copy; ratio: 1.8"></a></li>
-            <li><a href="#" class="uk-align-center uk-text-center" uk-icon="icon: trash; ratio: 1.8"></a></li>
+            <li><a href="javascript:void(0)" class=" uk-align-center uk-text-center" uk-icon="icon: home;ratio:1.8"></a></li>
+            <li><a href="javascript:void(0)" class=" uk-align-center uk-text-center" uk-icon="icon: menu;ratio:1.8"></a></li>
+            <li><a href="javascript:void(0)" class=" uk-align-center uk-text-center" uk-icon="icon: cog;ratio:1.8"></a></li>
         </ul>
     </div>
 </nav>
 <section class="top-banner" style="transform: translateX(60px);width: calc(100% - 60px);">
     <div class="uk-position-large">
-    <h2 class="logo">Calware</h2>
+    <h2 class="logo">VacationWare</h2>
     </div>
     <div class="uk-margin-auto uk-width-1-2" style="margin:auto 0;">
     <form method="post">

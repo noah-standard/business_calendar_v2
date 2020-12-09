@@ -5,12 +5,12 @@ import com.end.demo.service.cms.AdminService;
 import com.end.demo.service.cms.PageManageService;
 import com.end.demo.vo.AdminMenuVO;
 import com.end.demo.vo.UserMenuVO;
+import com.end.demo.vo.param.PageManageVO;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.net.InetAddress;
@@ -26,39 +26,22 @@ public class PageManageController {
     @Autowired
     PageManageService pageManageService;
 
-    @RequestMapping("")
-    public ModelAndView userPageManage() {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("menu_list",pageManageService.selectUserMenu());
-        mv.addObject("menu", "user");
-        mv.addObject("page", "menu_user");
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("")
+    public String userPageManage(Model model) {
+        model.addAttribute("menu_list",pageManageService.selectUserMenu());
+        model.addAttribute("menu", "user");
+        model.addAttribute("page", "menu_user");
+        return "cms/template";
     }
 
-    @RequestMapping(value={""},method = RequestMethod.POST)
-    public ModelAndView writeUserPage(@RequestParam String cate, @RequestParam String name, @RequestParam String link, @RequestParam String state ) {
-        HashMap<String, String> userMenuParam = new HashMap<String, String>();
-        userMenuParam.put("cate", cate);
-        userMenuParam.put("name", name);
-        userMenuParam.put("link", link);
-        userMenuParam.put("state", state);
-        userMenuParam.put("ip", Util.getIp());
-        pageManageService.insertUserMenu(userMenuParam);
-
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("redirect:/cms/page_manage");
-        return mv;
+    @PostMapping("")
+    public String writeUserPage(@ModelAttribute PageManageVO pageManageVO) {
+        pageManageService.insertUserMenu(pageManageVO);
+        return "redirect:/cms/page_manage";
     }
 
-    @RequestMapping(value={"/edit.do"} ,produces = "application/json; charset=utf8")
-    public String editUserMenu(@RequestBody Map<String, Object> param) {
-        UserMenuVO userMenuVO = new UserMenuVO();
-        userMenuVO.setNode((String)param.get("node"));
-        userMenuVO.setNode_parent((String)param.get("node_parent"));
-        userMenuVO.setNode_position((String)param.get("node_position"));
-        userMenuVO.setNodes_depth1((ArrayList) param.get("nodes_depth1"));
-
+    @GetMapping(value={"/edit.do"} ,produces = "application/json; charset=utf8")
+    public String editUserMenu(@ModelAttribute UserMenuVO userMenuVO) {
         pageManageService.updateUserMenu(userMenuVO);
         return "redirect:/cms/page_manage";
     }

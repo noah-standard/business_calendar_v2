@@ -6,12 +6,13 @@ import com.end.demo.service.cms.AdminService;
 import com.end.demo.service.cms.HolidayService;
 import com.end.demo.lib.Pager;
 import com.end.demo.vo.HolidayVO;
+import com.end.demo.vo.param.BBSPagerVO;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.WebSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -30,26 +31,18 @@ public class HolidayController {
     @Autowired
     AdminMenuService adminMenuService;
 
-    @RequestMapping("/list.do")
-    public ModelAndView holidayList(Model model) {
-        Map<String, Object> map = model.asMap();
-        ModelAndView mv = new ModelAndView();
+    @ModelAttribute
+    public void pageInfo(Model model){
+        model.addAttribute("page", "holiday");
+        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+    }
 
-        String search_order = (String) map.get("search_order");
-        String keyword = (String) map.get("keyword");
-        int curPage = 0;
-        if(Util.isEmpty(map.get("curPage"))) {
-            curPage = 0;
-        }else{
-            curPage = (int)map.get("curPage");
-        }
-        int list_order = 0;
-        if(Util.isEmpty(map.get("list_order"))){
-            list_order = 10;
-        }else{
-            list_order = (int)map.get("list_order");
-        }
-
+    @GetMapping("/list")
+    public String holidayList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
+        String search_order = bbsPagerVO.getSearch_order();
+        String keyword = bbsPagerVO.getKeyword();
+        int curPage = bbsPagerVO.getCurPage();
+        int list_order = bbsPagerVO.getList_order();
         // 레코드 갯수 계산
         int count = holidayService.countHolidayData(search_order, keyword);
         // mst_bbs 페이지블록 및 목록수
@@ -61,62 +54,48 @@ public class HolidayController {
         int start = pager.getPageBegin();
         int end = pager.getPageEnd();
         List<HolidayVO> holidayList = holidayService.selectHolidayList(start, end, search_order, keyword, list_order);
-        mv.addObject("holidayList", holidayList);
-        mv.addObject("listCount", count);
-        mv.addObject("search_order", search_order);
-        mv.addObject("keyword", keyword);
-        mv.addObject("pager", pager);
-        mv.addObject("page", "holiday");
-        mv.addObject("holiday_template","holiday_list");
-        mv.addObject("mode", "목록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("holidayList", holidayList);
+        model.addAttribute("listCount", count);
+        model.addAttribute("search_order", search_order);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("pager", pager);
+        model.addAttribute("holiday_template","holiday_list");
+        model.addAttribute("mode", "목록");
 
-        mv.setViewName("cms/template");
-        return mv;
+        return "cms/template";
     }
 
-    @RequestMapping("/write.do")
-    public ModelAndView holidayWrite() {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("page", "holiday");
-        mv.addObject("holiday_template","holiday_write");
-        mv.addObject("mode", "등록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/write")
+    public String holidayWrite(Model model) {
+        model.addAttribute("holiday_template","holiday_write");
+        model.addAttribute("mode", "등록");
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/write.do",method = RequestMethod.POST)
-    public String holidayWriteProcess(HolidayVO holidayVO) {
+    @PostMapping("/write.do")
+    public String holidayWriteProcess(@ModelAttribute HolidayVO holidayVO) {
         holidayService.writeHoliday(holidayVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
-    @RequestMapping("/edit.do")
-    public ModelAndView holidayEdit(@RequestParam int idx) {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("page", "holiday");
-        mv.addObject("holiday_template","holiday_write");
-        mv.addObject("mode", "수정");
-        mv.addObject("holidayObject",holidayService.getHoliday(idx));
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/edit")
+    public String holidayEdit(@RequestParam int idx,Model model) {
+        model.addAttribute("holiday_template","holiday_write");
+        model.addAttribute("mode", "수정");
+        model.addAttribute("holidayObject",holidayService.getHoliday(idx));
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/edit.do",method = RequestMethod.POST)
-    public String holidayEditProcess(HolidayVO holidayVO) {
+    @PostMapping("/edit.do")
+    public String holidayEditProcess(@ModelAttribute HolidayVO holidayVO) {
         holidayService.editHoliday(holidayVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
-    @RequestMapping("/delete.do")
+    @GetMapping("/delete.do")
     public String holidayDelete(@RequestParam int idx) {
         holidayService.deleteHoliday(idx);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
 }

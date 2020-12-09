@@ -20,9 +20,9 @@ public class BBSManageService {
     public void insertBBSManage(BBSManageVO bbsManageVO){
         if(bbsManageVO.getBbs_type().equals("gallery")){
             bbsManageVO.setList_gallery(bbsManageVO.getList_height());
-            bbsManageVO.setList_height("0");
+            bbsManageVO.setList_height(0);
         }else{
-            bbsManageVO.setList_gallery("0");
+            bbsManageVO.setList_gallery(0);
         }
         bbsManageVO.setCode(bbsManageVO.getBbs_type() +"_"+dao.getRandomIdx());
         dao.updateRandomIdx();

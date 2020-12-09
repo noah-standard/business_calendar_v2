@@ -99,7 +99,7 @@
                 <td class="uk-table-small uk-text-center">${item.type}</td>
                 <td class="uk-table-small uk-text-center">${item.name}(${item.userid})</td>
                 <td class="uk-table-expand uk-text-center">
-                    <a href="./view.do?idx=${item.idx}" class="uk-text-bold">${item.content}</a>
+                    <a href="./view?idx=${item.idx}" class="uk-text-bold">${item.content}</a>
                 </td>
                 <td class="uk-table-small uk-text-center"><fmt:parseDate var="regDateStr" value="${item.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" /><fmt:formatDate value="${regDateStr}" pattern="yyyy-MM-dd" /></td>
                 <td class="uk-table-small uk-text-center">
@@ -109,14 +109,14 @@
                         <option value="2" ${item.state == 2 ? "selected" : ""}>취소</option>
                     </select>
                 </td>
-                <td class="uk-table-small uk-text-center"><a href="./edit.do?idx=${item.idx}" class="uk-margin-small-left"><span class="uk-icon-button " uk-icon="file-edit"></span></a><a
+                <td class="uk-table-small uk-text-center"><a href="./edit?idx=${item.idx}" class="uk-margin-small-left"><span class="uk-icon-button " uk-icon="file-edit"></span></a><a
                         href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${item.idx}','삭제')" class="uk-margin-small-left"><span class="uk-icon-button" uk-icon="trash"></span></a></td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
     <div class=" uk-text-right uk-margin-bottom">
-        <a href="./write.do" class="uk-button uk-button-primary">등록</a>
+        <a href="./write" class="uk-button uk-button-primary">등록</a>
     </div>
     <ul class="uk-pagination uk-flex-center uk-flex-middle" uk-margin>
         <li><a href="javascript:list('${pager.prevPage}')"><span uk-pagination-previous></span></a></li>

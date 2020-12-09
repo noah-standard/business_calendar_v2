@@ -6,15 +6,14 @@ import com.end.demo.service.cms.AdminService;
 import com.end.demo.service.cms.CalendarService;
 import com.end.demo.service.cms.MemberService;
 import com.end.demo.service.cms.PageManageService;
+import com.end.demo.vo.param.BBSPagerVO;
 import com.end.demo.vo.MemberVO;
 import com.end.demo.vo.UserVO;
 import com.end.demo.vo.join.CalendarMemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -39,29 +38,22 @@ public class UserCalendarController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/list")
-    public ModelAndView calendarList(@RequestParam(defaultValue = "1") int curPage
-                                ,@RequestParam(defaultValue = "all") String search_order
-                                ,@RequestParam(defaultValue = "") String keyword
-                                ,@RequestParam(required = false) String idx
-                                ,@RequestParam(defaultValue = "0") int list_scale
-                                ,@RequestParam(defaultValue = "0") int list_order) {
-
-        ModelAndView mv = new ModelAndView();
+    @GetMapping("/list")
+    public String calendarList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
 
         // 레코드 갯수 계산
-        int count = calendarService.countCalendarData(search_order, keyword);
+        int count = calendarService.countCalendarData(bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword());
         // 페이지블록 및 목록수
         int pageCnt = 10;
         int listCnt = 10;
 
         // 페이지 나누기 관련처리
-        Pager pager = new Pager(count, curPage, listCnt, pageCnt);
+        Pager pager = new Pager(count, bbsPagerVO.getCurPage(), listCnt, pageCnt);
         int start = pager.getPageBegin();
         int end = pager.getPageEnd();
 
         // 리스트 가져오기
-        List<CalendarMemberVO> calendarList = calendarService.selectCalendarList(start, end, search_order, keyword, list_order);
+        List<CalendarMemberVO> calendarList = calendarService.selectCalendarList(start, end, bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword(), bbsPagerVO.getList_order());
 
         List<CalendarMemberVO> calendarMemberVOS = new ArrayList<>();
 
@@ -84,38 +76,32 @@ public class UserCalendarController {
         }
 
         // 보낼 객체
-        mv.addObject("calendarMemberList", calendarMemberVOS);
-        mv.addObject("listCount", count);
-        mv.addObject("search_order", search_order);
-        mv.addObject("keyword", keyword);
-        mv.addObject("pager", pager);
-        mv.addObject("page", "bbs/template_mypage");
-        mv.addObject("mypage_template","skin/calendar_list");
-        mv.addObject("mode", "목록");
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-
-        mv.setViewName("index");
-        return mv;
+        model.addAttribute("calendarMemberList", calendarMemberVOS);
+        model.addAttribute("listCount", count);
+        model.addAttribute("search_order", bbsPagerVO.getSearch_order());
+        model.addAttribute("keyword", bbsPagerVO.getKeyword());
+        model.addAttribute("pager", pager);
+        model.addAttribute("page", "bbs/template_mypage");
+        model.addAttribute("mypage_template","skin/calendar_list");
+        model.addAttribute("mode", "목록");
+        model.addAttribute("userMenuList",pageManageService.selectUserMenu());
+        return "index";
     }
 
-    @RequestMapping("/write")
-    public ModelAndView calendarWrite( HttpSession session) {
-        ModelAndView mv = new ModelAndView();
-
+    @GetMapping("/write")
+    public String calendarWrite(HttpSession session,Model model) {
         String userid = (String) session.getAttribute("userid");
         UserVO userVO = userService.getUser(userid);
 
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("memberObject",memberService.getMember(userVO.getIdx()));
-        mv.addObject("page", "bbs/template_calendar");
-        mv.addObject("calendar_template","skin/calendar_write");
-        mv.addObject("mode", "등록");
-
-        mv.setViewName("index");
-        return mv;
+        model.addAttribute("userMenuList",pageManageService.selectUserMenu());
+        model.addAttribute("memberObject",memberService.getMember(userVO.getIdx()));
+        model.addAttribute("page", "bbs/template_calendar");
+        model.addAttribute("calendar_template","skin/calendar_write");
+        model.addAttribute("mode", "등록");
+        return "index";
     }
 
-    @RequestMapping(value = "/write.do",method = RequestMethod.POST)
+    @PostMapping("/write.do")
     public String calendarWriteProcess(CalendarMemberVO calendarMemberVO) {
         calendarService.writeCalendar(calendarMemberVO);
         return "redirect:/";

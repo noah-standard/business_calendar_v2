@@ -10,8 +10,9 @@ import com.end.demo.vo.UserVO;
 import com.end.demo.vo.join.CalendarMemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.WebSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -29,46 +30,32 @@ public class MyPageController {
     @Autowired
     MemberService memberService;
 
-    @RequestMapping("")
-    public ModelAndView memberView(HttpSession session) {
-        ModelAndView mv = new ModelAndView();
-
-        String userid = (String) session.getAttribute("userid");
-        UserVO userVO = userService.getUser(userid);
-
-        MemberVO memberVO = memberService.getMember(userVO.getIdx());
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("memberObject",memberVO);
-        mv.addObject("memberLevelObject",memberService.getMemberLevel(memberVO.getMem_level()));
-        mv.addObject("page", "bbs/template_mypage");
-        mv.addObject("mypage_template","skin/mypage_view");
-//        mv.addObject("mode", "정보보기");
-
-        mv.setViewName("index");
-        return mv;
-    }
-
-    @RequestMapping("/edit")
-    public ModelAndView memberEdit(HttpSession session) {
-        ModelAndView mv = new ModelAndView();
-
-        String userid = (String) session.getAttribute("userid");
+    @ModelAttribute
+    public void memberInfo(WebSession session,Model model){
+        String userid = session.getAttribute("userid");
         UserVO userVO = userService.getUser(userid);
         MemberVO memberVO = memberService.getMember(userVO.getIdx());
 
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("memberObject",memberVO);
-        mv.addObject("memberLevelObject",memberService.getMemberLevel(memberVO.getMem_level()));
-        mv.addObject("page", "bbs/template_mypage");
-        mv.addObject("mypage_template","skin/mypage_write");
-        mv.addObject("mode", "정보수정");
-
-        mv.setViewName("index");
-        return mv;
+        model.addAttribute("userMenuList",pageManageService.selectUserMenu());
+        model.addAttribute("memberObject",memberVO);
+        model.addAttribute("memberLevelObject",memberService.getMemberLevel(memberVO.getMem_level()));
+        model.addAttribute("page", "bbs/template_mypage");
     }
 
+    @GetMapping("")
+    public String memberVie(Model model) {
+        model.addAttribute("mypage_template","skin/mypage_view");
+        return "index";
+    }
 
-    @RequestMapping(value = "/edit.do",method = RequestMethod.POST)
+    @GetMapping("/edit")
+    public String memberEdit(Model model) {
+        model.addAttribute("mypage_template","skin/mypage_write");
+        model.addAttribute("mode", "정보수정");
+        return "index";
+    }
+
+    @PostMapping("/edit.do")
     public String calendarWriteProcess(MemberVO memberVO) {
         memberService.editMember(memberVO);
         return "redirect:/mypage";

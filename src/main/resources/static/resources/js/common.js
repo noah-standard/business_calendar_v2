@@ -311,7 +311,8 @@ function send_ajax(url) {
     let xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.status === 200 || xhr.status === 201) {
-            location.reload();
+            console.log(xhr.responseText);
+            // location.reload();
         } else {
             console.error(xhr.responseText);
         }
@@ -322,7 +323,8 @@ function send_ajax(url) {
 
 function confirm_data(url, title) {
     if (confirm("해당 정보를" + title + "하시겠습니까?")) {
-        send_ajax(url);
+        location.href = url;
+        // send_ajax(url);
     }
 }
 
@@ -379,6 +381,11 @@ function chk_form(form) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    chk_label();
-    editor_label();
+    let path = window.location.pathname;
+    let compPath = path.split("/");    //   "/" 로 전체 url 을 나눈다
+
+    if(compPath[1] == 'cms'){
+        chk_label();
+        editor_label();
+    }
 });

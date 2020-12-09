@@ -5,7 +5,6 @@
 <script src='../static/resources/js/fullcalendar/locale/ko.js'></script>
 <script>
 
-
     document.addEventListener('DOMContentLoaded', function () {
 
         var calendarEl = document.getElementById('calendar');
@@ -59,7 +58,7 @@
                     <c:if test="${item.state == '1' ? true : false}" var="result">
                     color: '#00f'
                     </c:if>
-                }
+                },
                 </c:forEach>
 
                 </c:when>

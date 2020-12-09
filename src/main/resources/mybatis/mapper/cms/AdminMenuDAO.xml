@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.end.demo.dao.cms.IAdminMenuDAO">
-    <insert id="insertAdminMenu" parameterType="HashMap">
+    <insert id="insertAdminMenu" parameterType="com.end.demo.vo.param.PageManageVO">
         <if test="cate == 0">
         insert into cs_admin_menu (IDX,ref,ref_step,ref_level,name,link,MENU_CUSTOM,menu_target,del_flag,del_date,reg_date,reg_ip)
         values(cs_admin_menu_seq.NEXTVAL,cs_admin_menu_seq.CURRVAL,0,cs_admin_menu_seq.CURRVAL,#{name},#{link},'NULL',0,0,SYSTIMESTAMP,SYSTIMESTAMP,#{ip})
@@ -14,7 +14,7 @@
         </if>
     </insert>
     <select id="selectAdminMenu" parameterType="com.end.demo.vo.AdminMenuVO" resultType="com.end.demo.vo.AdminMenuVO">
-        select * from cs_admin_menu where del_flag =0 and ref_step = 0 order by ref_level asc ,ref desc, ref_step asc
+        select * from cs_admin_menu where del_flag =0 order by ref_level asc ,ref desc, ref_step asc
     </select>
     <select id="selectAdminMenuOne" parameterType="String" resultType="com.end.demo.vo.AdminMenuVO">
         select * from cs_admin_menu where del_flag =0 and state = 0 and ref = ${menu}  order by ref desc, ref_step asc, ref_level asc

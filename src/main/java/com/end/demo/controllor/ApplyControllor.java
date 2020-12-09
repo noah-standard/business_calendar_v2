@@ -5,9 +5,7 @@ import com.end.demo.vo.CalendarVO;
 import com.end.demo.vo.XhrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -20,7 +18,7 @@ public class ApplyControllor {
     @Autowired
     UserService service;
 
-    @RequestMapping("")
+    @GetMapping("")
     public ModelAndView getAccept(Principal principal) {
         ModelAndView mv = new ModelAndView();
         mv.addObject("page", "fragments/accept");//html templates
@@ -32,18 +30,11 @@ public class ApplyControllor {
         return mv;
     }
 
-    @RequestMapping(value = "write.do", method = RequestMethod.POST)
+    @PostMapping("write.do")
     public String insertCalendar(CalendarVO cVo) {
         System.out.println(cVo);
         service.insertCalendar(cVo);
         return "redirect:/accept";
-    }
-
-
-    @RequestMapping(value = "/xhr", method = RequestMethod.POST)
-    @ResponseBody
-    public List<CalendarVO> getXhrList(XhrVO values) {
-        return service.getCalendar(values);
     }
 
 }

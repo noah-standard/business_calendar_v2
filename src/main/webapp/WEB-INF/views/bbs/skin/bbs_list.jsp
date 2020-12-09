@@ -62,17 +62,6 @@
     <div class="uk-margin-medium-left ">
     총 ${bbs_count}개의 게시물이 있습니다.
     </div>
-<%--    <div class="uk-text-right uk-flex  uk-width-1-4 uk-margin-medium-right">
-        <select class="uk-select" id="list_order" onchange="list_order()">
-            <option value="0" ${param.list_order eq 0 ? 'selected' : list_order eq '' ? 'selected' : ''}>최근등록순</option>
-            <option value="1" ${param.list_order eq 1 ? 'selected' : ''}>과거등록순</option>
-        </select>
-        <select class="uk-select uk-margin-small-left" id="list_scale" onchange="list_scale()">
-            <option value="10" ${param.list_scale eq '10' ? 'selected' : list_scale eq '' ? 'selected' : '' }>10개식</option>
-            <option value="20" ${param.list_scale eq '20' ? 'selected' : ''}>20개식</option>
-            <option value="50" ${param.list_scale eq '50' ? 'selected' : ''}>50개식</option>
-        </select>
-    </div>--%>
 </div>
 <div class="uk-flex uk-flex-column uk-margin-medium-left uk-margin-medium-right">
     <table class="uk-table uk-table-hover uk-table-divider uk-table-small uk-table-middle">

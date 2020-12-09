@@ -1,20 +1,18 @@
 package com.end.demo.controllor.cms;
 
 import com.end.demo.lib.Pager;
-import com.end.demo.lib.Util;
 import com.end.demo.service.cms.AdminMenuService;
-import com.end.demo.service.cms.AdminService;
 import com.end.demo.service.cms.MemberService;
+import com.end.demo.vo.param.BBSPagerVO;
 import com.end.demo.vo.MemLevelVO;
 import com.end.demo.vo.MemberVO;
 import com.end.demo.vo.join.MemberMemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,29 +27,27 @@ public class MemberController {
     @Autowired
     AdminMenuService adminMenuService;
 
-    @RequestMapping("/list.do")
-    public ModelAndView memberList(@RequestParam(defaultValue = "1") int curPage
-                                ,@RequestParam(defaultValue = "all") String search_order
-                                ,@RequestParam(defaultValue = "") String keyword
-                                ,@RequestParam(required = false) String idx
-                                ,@RequestParam(defaultValue = "0") int list_scale
-                                ,@RequestParam(defaultValue = "0") int list_order) {
+    @ModelAttribute
+    public void pageInfo(Model model){
+        model.addAttribute("page", "member");
+        model.addAttribute("menuList",adminMenuService.selectAdminMenu());
+    }
 
-        ModelAndView mv = new ModelAndView();
-
+    @GetMapping("/list")
+    public String memberList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
         // 레코드 갯수 계산
-        int count = memberService.countMemberData(search_order, keyword);
+        int count = memberService.countMemberData(bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword());
         // mst_bbs 페이지블록 및 목록수
         int pageCnt = 10;
         int listCnt = 10;
 
         // 페이지 나누기 관련처리
-        Pager pager = new Pager(count, curPage, listCnt, pageCnt);
+        Pager pager = new Pager(count, bbsPagerVO.getCurPage(),  listCnt, pageCnt);
         int start = pager.getPageBegin();
         int end = pager.getPageEnd();
 
         // 리스트 가져오기
-        List<MemberVO> memberList = memberService.selectMemberList(start, end, search_order, keyword, list_order);
+        List<MemberVO> memberList = memberService.selectMemberList(start, end, bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword(), bbsPagerVO.getList_order());
 
         // member | mem_level
         List<MemberMemVO> memberMemVOS = new ArrayList<>();
@@ -77,66 +73,53 @@ public class MemberController {
         }
 
         // 보낼 객체
-        mv.addObject("memberList", memberMemVOS);
-        mv.addObject("listCount", count);
-        mv.addObject("search_order", search_order);
-        mv.addObject("keyword", keyword);
-        mv.addObject("pager", pager);
-        mv.addObject("page", "member");
-        mv.addObject("member_template","member_list");
-        mv.addObject("mode", "목록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
+        model.addAttribute("memberList", memberMemVOS);
+        model.addAttribute("listCount", count);
+        model.addAttribute("search_order", bbsPagerVO.getSearch_order());
+        model.addAttribute("keyword", bbsPagerVO.getKeyword());
+        model.addAttribute("pager", pager);
+        model.addAttribute("member_template","member_list");
+        model.addAttribute("mode", "목록");
 
-        mv.setViewName("cms/template");
-        return mv;
+        return "cms/template";
     }
 
-    @RequestMapping("/write.do")
-    public ModelAndView memberWrite() {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("memberLevelList",memberService.selectMemberLevelList());
-        mv.addObject("page", "member");
-        mv.addObject("member_template","member_write");
-        mv.addObject("mode", "등록");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/write")
+    public String memberWrite(Model model) {
+        model.addAttribute("memberLevelList",memberService.selectMemberLevelList());
+        model.addAttribute("action","write.do");
+        model.addAttribute("member_template","member_write");
+        model.addAttribute("mode", "등록");
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/write.do",method = RequestMethod.POST)
-    public String memberWriteProcess(MemberVO memberVO) {
+    @PostMapping("/write.do")
+    public String memberWriteProcess(@ModelAttribute MemberVO memberVO) {
         memberService.writeMember(memberVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
-    @RequestMapping("/edit.do")
-    public ModelAndView memberEdit(@RequestParam int idx) {
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("memberLevelList",memberService.selectMemberLevelList());
-        mv.addObject("page", "member");
-        mv.addObject("member_template","member_write");
-        mv.addObject("mode", "수정");
-        mv.addObject("menuList",adminMenuService.selectAdminMenu());
-        mv.addObject("memberObject",memberService.getMember(idx));
-
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("/edit")
+    public String memberEdit(@RequestParam int idx,Model model) {
+        model.addAttribute("memberLevelList",memberService.selectMemberLevelList());
+        model.addAttribute("member_template","member_write");
+        model.addAttribute("action","write.do");
+        model.addAttribute("mode", "수정");
+        model.addAttribute("memberObject",memberService.getMember(idx));
+        return "cms/template";
     }
 
-    @RequestMapping(value = "/edit.do",method = RequestMethod.POST)
-    public String memberEditProcess(MemberVO memberVO) {
+    @PostMapping("/edit.do")
+    public String memberEditProcess(@ModelAttribute MemberVO memberVO) {
         memberService.editMember(memberVO);
         return "redirect:list.do";
     }
 
-    @RequestMapping("/delete.do")
+    @GetMapping("/delete.do")
     public String memberDelete(@RequestParam int idx) {
         HashMap<String, Object> delData = new HashMap<>();
         delData.put("idx",idx);
-        delData.put("del_date",Util.getDate("timestamp"));
+        delData.put("del_date", LocalDateTime.now());
         memberService.deleteMember(delData);
         return "redirect:list.do";
     }

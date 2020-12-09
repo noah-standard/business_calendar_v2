@@ -83,15 +83,16 @@
     }
 </style>
 <input type="hidden" id="id">
-<form method="post" name="calendar_form"
+<form method="post" name="calendar_form" action="${action}"
       class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" onsubmit="return chk_form(this);">
+    <input type="hidden" name="idx" value="${calendarObject.idx}">
     <div class="uk-margin">
         <label class="uk-form-label" for="type">사원검색</label>
         <div class="uk-form-controls">
             <input type="hidden" name="member_idx" value="${calendarObject.member_idx}">
             <input class="uk-input uk-width-1-6 __ck" title="사원검색" name="name" type="text" value="${calendarObject.name}" readonly><a href="javascript:void(0)"
                                                                                             onclick="search_member(this,'member_search','사원검색')"
-                                                                                            class="uk-button uk-button-default uk-margin-small-left">사원검색</a>
+            class="uk-button uk-button-default uk-margin-small-left">사원검색</a>
         </div>
     </div>
     <div class="uk-margin">

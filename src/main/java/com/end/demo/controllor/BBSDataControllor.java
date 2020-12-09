@@ -8,11 +8,15 @@ import com.end.demo.service.cms.BBSManageService;
 import com.end.demo.service.cms.PageManageService;
 import com.end.demo.vo.BBSManageVO;
 import com.end.demo.vo.BBSDataVO;
+import com.end.demo.vo.param.BBSPagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -35,63 +39,51 @@ public class BBSDataControllor {
     @Autowired
     BBSManageService bbsManageService;
 
-    @RequestMapping("")
-    public ModelAndView BBSDataList(@RequestParam(required = false) String code
-            , @RequestParam(required = false) String mode
-            , @RequestParam(defaultValue = "1") int curPage
-            , @RequestParam(defaultValue = "all") String search_order
-            , @RequestParam(defaultValue = "") String keyword
-            , @RequestParam(required = false) String idx
-            , @RequestParam(defaultValue = "0") int list_scale
-            , @RequestParam(defaultValue = "0") int list_order) {
+    @ModelAttribute
+    public void template(Model model){
+        model.addAttribute("page", "bbs/bbs");
+        model.addAttribute("userMenuList",pageManageService.selectUserMenu());
+    }
 
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("menuList", adminMenuService.selectAdminMenu());
+    @GetMapping("list")
+    public String BBSDataList(BBSPagerVO bbsPagerVO, BindingResult bindingResult, Model model) {
 
-        BBSManageVO bbsManageVO = bbsManageService.getBBSManageCode(code);
+        BBSManageVO bbsManageVO = bbsManageService.getBBSManageCode(bbsPagerVO.getCode());
+
         // 레코드 갯수 계산
-        int count = adminBbsDataService.countBBSData(search_order, keyword, code);
+        int count = adminBbsDataService.countBBSData(bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword(), bbsPagerVO.getCode());
         // mst_bbs 페이지블록 및 목록수
-        int pageCnt = Integer.parseInt(bbsManageVO.getList_page());
+        int pageCnt = bbsManageVO.getList_page();
         int listCnt = 0;
-        if (list_scale == 0) {
-            listCnt = Integer.parseInt(bbsManageVO.getList_height());
+        int curPage = bbsPagerVO.getCurPage();
+        if (bbsPagerVO.getList_scale() == 0) {
+            listCnt = bbsManageVO.getList_height();
         } else {
-            listCnt = list_scale;
+            listCnt = bbsPagerVO.getList_scale();
         }
 
         // 페이지 나누기 관련처리
         Pager pager = new Pager(count, curPage, listCnt, pageCnt);
         int start = pager.getPageBegin();
         int end = pager.getPageEnd();
-        List<BBSDataVO> bbsListVO = adminBbsDataService.selectBBSData(start, end, search_order, keyword, code, list_order);
+        List<BBSDataVO> bbsListVO = adminBbsDataService.selectBBSData(start, end, bbsPagerVO.getSearch_order(), bbsPagerVO.getKeyword(), bbsPagerVO.getCode(), bbsPagerVO.getList_order());
 
-        mv.addObject("mst_bbs", bbsManageVO);
-        mv.addObject("bbsList", bbsListVO);
-        mv.addObject("bbs_count", count);
-        mv.addObject("search_order", search_order);
-        mv.addObject("keyword", keyword);
-        mv.addObject("pager", pager);
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("bbs_template", "skin/bbs_list");
-        mv.addObject("page", "bbs/bbs");
-
-        mv.setViewName("index");
-        return mv;
+        model.addAttribute("mst_bbs", bbsManageVO);
+        model.addAttribute("bbsList", bbsListVO);
+        model.addAttribute("bbs_count", count);
+        model.addAttribute("search_order", bbsPagerVO.getSearch_order());
+        model.addAttribute("keyword", bbsPagerVO.getKeyword());
+        model.addAttribute("pager", pager);
+        model.addAttribute("bbs_template", "skin/bbs_list");
+        return "index";
     }
 
-    @RequestMapping("/view")
-    public ModelAndView BBSDataView(@RequestParam(required = false) String code,@RequestParam(required = false) int idx) {
-        adminBbsDataService.updateBBSDataReadCnt(idx);
-        ModelAndView mv = new ModelAndView();
-
-        mv.addObject("BBSObject", bbsDataService.getBBSData(idx));
-        mv.addObject("mode", "상세보기");
-        mv.addObject("userMenuList",pageManageService.selectUserMenu());
-        mv.addObject("bbs_template", "skin/bbs_view");
-        mv.addObject("page", "bbs/bbs");
-        mv.setViewName("index");
-        return mv;
+    @GetMapping("/view")
+    public String BBSDataView(@RequestParam(required = false) int idx,Model model) {
+        adminBbsDataService.updateBBSDataReadCnt(idx); // 조회수 증가
+        model.addAttribute("BBSObject", bbsDataService.getBBSData(idx));
+        model.addAttribute("bbs_template", "skin/bbs_view");
+        return "index";
     }
 
 }

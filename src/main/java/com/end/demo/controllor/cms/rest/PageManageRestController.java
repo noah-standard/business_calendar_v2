@@ -4,10 +4,8 @@ import com.end.demo.service.cms.PageManageService;
 import com.end.demo.vo.AdminMenuVO;
 import com.end.demo.vo.UserMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,21 +17,25 @@ public class PageManageRestController {
     @Autowired
     PageManageService pageManageService;
 
-    @RequestMapping(value = "")
+    @GetMapping("")
     public UserMenuVO getAdminMenu(@RequestParam String node) {
         return pageManageService.getUserMenu(node);
     }
 
-    @RequestMapping(value = "",method = RequestMethod.POST)
-    public void updateAdminMenuOne(HttpServletResponse response, UserMenuVO userMenuVO) throws IOException {
+    @PostMapping("")
+    public ModelAndView updateAdminMenuOne(UserMenuVO userMenuVO) {
+        ModelAndView modelAndView = new ModelAndView();
         pageManageService.updateUserMenuOne(userMenuVO);
-        response.sendRedirect("/cms/page_manage");
+        modelAndView.setViewName("redirect:/cms/page_manage");
+        return modelAndView;
     }
 
-    @RequestMapping(value = "/delete.do")
-    public void deleteAdminMenuOne(HttpServletResponse response, @RequestParam int idx) throws IOException {
+    @GetMapping("/delete.do")
+    public ModelAndView deleteAdminMenuOne(@RequestParam int idx) {
+        ModelAndView modelAndView = new ModelAndView();
         pageManageService.deleteUserMenuOne(idx);
-        response.sendRedirect("/cms/page_manage");
+        modelAndView.setViewName("redirect:/cms/page_manage");
+        return modelAndView;
     }
 
 }

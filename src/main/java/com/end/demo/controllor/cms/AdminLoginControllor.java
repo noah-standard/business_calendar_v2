@@ -6,9 +6,7 @@ import com.end.demo.vo.AdminVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -23,35 +21,28 @@ public class AdminLoginControllor {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
-    @RequestMapping("admin_login")
-    public ModelAndView cmsLogin() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("cms/admin_login");
-        return mv;
+    @GetMapping("admin_login")
+    public String cmsLogin() {
+        return "cms/admin_login";
     }
 
-    @RequestMapping(value = "admin_login",method = RequestMethod.POST)
-    public ModelAndView cmsLoginProcess(HttpSession session, @RequestParam String userid, @RequestParam String password) {
+    @PostMapping("admin_login")
+    public String cmsLoginProcess(HttpSession session,@ModelAttribute AdminVO adminVO) {
+        AdminVO chkAdminVO = adminLoginService.getAdmin(adminVO.getUserid());
 
-        ModelAndView mv = new ModelAndView();
-        AdminVO adminVO = adminLoginService.getAdmin(userid);
-
-        if (session != null && adminVO != null) {
-            boolean matchPw = passwordEncoder.matches(password,adminVO.getPassword());
+        if (session != null && chkAdminVO != null) {
+            boolean matchPw = passwordEncoder.matches(adminVO.getPassword(),chkAdminVO.getPassword());
             if (matchPw) {
                 session.setAttribute("adminLoginCheck", true);
-                session.setAttribute("adminUserid", adminVO.getUserid());
-                mv.setViewName("redirect:calendar/list.do");
+                session.setAttribute("adminUserid", chkAdminVO.getUserid());
+                return "redirect:calendar/list";
             }
-
-        }else{
-            mv.setViewName("cms/admin_login");
         }
 
-        return mv;
+        return "cms/admin_login";
     }
 
-    @RequestMapping(value = "logout.do")
+    @GetMapping("logout.do")
     public String logout(HttpSession session) {
         session.removeAttribute("adminLoginCheck");
         session.removeAttribute("adminUserid");

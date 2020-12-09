@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.end.demo.dao.cms.IPageManageDAO">
-    <insert id="insertUserMenu" parameterType="HashMap">
+    <insert id="insertUserMenu" parameterType="com.end.demo.vo.param.PageManageVO">
         <selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
             SELECT  cs_user_menu_seq.NEXTVAL FROM dual
         </selectKey>

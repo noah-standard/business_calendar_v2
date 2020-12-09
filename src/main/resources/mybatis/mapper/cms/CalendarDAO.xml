@@ -51,7 +51,7 @@
         state = #{state}
         where idx = #{idx}
     </update>
-    <update id="deleteCalendar" parameterType="HashMap">
+    <update id="deleteCalendar" parameterType="int">
         update cs_calendar
         set
         del_flag = 1

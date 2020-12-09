@@ -4,9 +4,8 @@ import com.end.demo.service.cms.BBSManageService;
 import com.end.demo.vo.BBSManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -16,54 +15,48 @@ public class BBSManageController {
     @Autowired
     BBSManageService bbsManageService;
 
-    @RequestMapping("")
-    public ModelAndView BBSManageList(@RequestParam(required = false) String mode) {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("menu","user");
-        mv.addObject("page", "bbs_manage");
-        mv.addObject("totalBBS",bbsManageService.getTotalBBSManage());
-        mv.addObject("BBSManageList",bbsManageService.selectBBSManage());
-        mv.addObject("BBSManageGroupList",bbsManageService.selectGroupBBSManage());
-        mv.setViewName("cms/template");
-        return mv;
+    @ModelAttribute
+    public void pageInfo(Model model){
+        model.addAttribute("menu","user");
+        model.addAttribute("BBSManageList",bbsManageService.selectBBSManage());
     }
 
-    @RequestMapping("write")
-    public ModelAndView BBSManageWrite() {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("menu","user");
-        mv.addObject("page", "bbs_manage_write");
-        mv.addObject("action", "write.do");
-        mv.addObject("BBSManageList",bbsManageService.selectBBSManage());
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("")
+    public String BBSManageList(@RequestParam(required = false) String mode,Model model) {
+        model.addAttribute("page", "bbs_manage");
+        model.addAttribute("totalBBS",bbsManageService.getTotalBBSManage());
+        model.addAttribute("BBSManageGroupList",bbsManageService.selectGroupBBSManage());
+        return "cms/template";
     }
 
-    @RequestMapping(value = {"write.do"}, method = RequestMethod.POST)
-    public String BBSManageWriteProcess(BBSManageVO bbsManageVO) {
+    @GetMapping("write")
+    public String BBSManageWrite(Model model) {
+        model.addAttribute("page", "bbs_manage_write");
+        model.addAttribute("action", "write.do");
+        return "cms/template";
+    }
+
+    @PostMapping("write.do")
+    public String BBSManageWriteProcess(@ModelAttribute BBSManageVO bbsManageVO) {
         bbsManageService.insertBBSManage(bbsManageVO);
         return "redirect:cms/bbs_manage";
     }
 
-    @RequestMapping("edit")
-    public ModelAndView BBSManageEdit(@RequestParam(required = false) String idx) {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("bbsObject", bbsManageService.getBBSManage(idx));
-        mv.addObject("menu","user");
-        mv.addObject("page", "bbs_manage_write");
-        mv.addObject("action", "edit.do");
-        mv.addObject("BBSManageList",bbsManageService.selectBBSManage());
-        mv.setViewName("cms/template");
-        return mv;
+    @GetMapping("edit")
+    public String BBSManageEdit(@RequestParam(required = false) String idx,Model model) {
+        model.addAttribute("bbsObject", bbsManageService.getBBSManage(idx));
+        model.addAttribute("page", "bbs_manage_write");
+        model.addAttribute("action", "edit.do");
+        return "cms/template";
     }
 
-    @RequestMapping(value = {"edit.do"}, method = RequestMethod.POST)
+    @PostMapping("edit.do")
     public String BBSManageEditProcess(BBSManageVO bbsManageVO) {
         bbsManageService.updateBBSManage(bbsManageVO);
         return "redirect:cms/bbs_manage";
     }
 
-    @RequestMapping(value = {"delete.do"}, method = RequestMethod.POST)
+    @PostMapping("delete.do")
     public String BBSManageDeleteProcess(@RequestParam(required = false) String idx) {
         bbsManageService.deleteBBSManage(idx);
         return "redirect:cms/bbs_manage";

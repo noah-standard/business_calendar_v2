@@ -51,8 +51,8 @@ public class CalendarService {
         dao.editCalendar(calendarMemberVO);
     }
 
-    public void deleteCalendar(HashMap<String, Object> delData){
-        dao.deleteCalendar(delData);
+    public void deleteCalendar(int idx){
+        dao.deleteCalendar(idx);
     }
 
     public void writeCalendar(CalendarMemberVO calendarMemberVO){

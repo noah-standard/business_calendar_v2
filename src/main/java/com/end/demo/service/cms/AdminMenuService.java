@@ -3,6 +3,7 @@ package com.end.demo.service.cms;
 import com.end.demo.dao.cms.IAdminDAO;
 import com.end.demo.dao.cms.IAdminMenuDAO;
 import com.end.demo.vo.*;
+import com.end.demo.vo.param.PageManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -22,7 +23,7 @@ public class AdminMenuService {
     @Autowired
     IAdminMenuDAO dao;
 
-    public void insertAdminMenu(HashMap<String, String> adminMenuParam){dao.insertAdminMenu(adminMenuParam);}
+    public void insertAdminMenu(PageManageVO pageManageVO){dao.insertAdminMenu(pageManageVO);}
     public List<AdminMenuVO> selectAdminMenu(){return dao.selectAdminMenu();}
     public List<AdminMenuVO> selectAdminMenuOne(String menu){return dao.selectAdminMenuOne(menu);}
     public AdminMenuVO selectOneAdminMenu(String node){return dao.selectOneAdminMenu(node);}
