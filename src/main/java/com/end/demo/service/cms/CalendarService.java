@@ -34,6 +34,10 @@ public class CalendarService {
         return dao.selectCalendarList(start, end, search_order, keyword, list_order);
     }
 
+    public List<CalendarMemberVO> selectCalendarList(int start, int end, String search_order, String keyword, int list_order,int idx) {
+        return dao.selectCalendarDetailList(start, end, search_order, keyword, list_order,idx);
+    }
+
     public List<CalendarMemberVO> selectCalendarList() {
         return dao.selectCalendarListNotparameter();
     }
@@ -50,10 +54,6 @@ public class CalendarService {
         calendarMemberVO.setE_date(calendarMemberVO.getS_date());
         dao.editCalendar(calendarMemberVO);
     }
-
-    public int getVacationTotal(){return dao.getVacationTotal();}
-    public int getVacationApplyTotal(){return dao.getVacationApplyTotal();}
-    public int getVacationDisappear(){return dao.getVacationDisappear();}
 
     public void deleteCalendar(int idx){
         dao.deleteCalendar(idx);

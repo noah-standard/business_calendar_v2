@@ -108,7 +108,7 @@ public class MemberController {
     public String memberEdit(@RequestParam int idx,Model model) {
         model.addAttribute("memberLevelList",memberService.selectMemberLevelList());
         model.addAttribute("member_template","member_write");
-        model.addAttribute("action","write.do");
+        model.addAttribute("action","edit.do");
         model.addAttribute("mode", "수정");
         model.addAttribute("memberObject",memberService.getMember(idx));
         return "cms/template";
@@ -116,11 +116,12 @@ public class MemberController {
 
     @PostMapping("/edit.do")
     public String memberEditProcess(@Valid @ModelAttribute MemberVO memberVO,BindingResult bindingResult) {
+        System.out.println(memberVO);
         if(bindingResult.hasErrors()){
             return "redirect:edit";
         }
         memberService.editMember(memberVO);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
     @GetMapping("/delete.do")
@@ -129,7 +130,7 @@ public class MemberController {
         delData.put("idx",idx);
         delData.put("del_date", LocalDateTime.now());
         memberService.deleteMember(delData);
-        return "redirect:list.do";
+        return "redirect:list";
     }
 
 }

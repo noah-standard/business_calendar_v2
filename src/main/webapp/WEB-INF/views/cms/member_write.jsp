@@ -7,6 +7,7 @@
 </style>
 <form method="post" action="${action}" name="bbs_form" class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" onsubmit="return chk_form(this);">
     <input type="hidden" name="user_ok" value="no">
+    <input type="hidden" name="idx" value="${memberObject.idx}">
     <div class="uk-margin">
         <label class="uk-form-label" for="userid">아이디</label>
         <div class="uk-form-controls">

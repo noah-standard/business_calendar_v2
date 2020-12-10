@@ -46,23 +46,61 @@
         search_order();
     });
 
+    function getVacationCnt(idx) {
+        let xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.status === 200 || xhr.status === 201) {
+                vacation_cnt = xhr.responseText;
+                document.querySelector("#vacation_cnt_" + idx).innerHTML += "" + xhr.responseText + " 개";
+            } else {
+                console.error(xhr.responseText);
+            }
+        };
+        xhr.open('GET', "/cms/ajax/getvacation?idx=" + idx);
+        xhr.send(); // 요청 전송
+    }
+
+    function getVacationApplyCnt(idx) {
+        let xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.status === 200 || xhr.status === 201) {
+                vacationapply_cnt = xhr.responseText;
+                document.querySelector("#vacationapply_cnt_" + idx).innerHTML += "" + xhr.responseText + " 개";
+            } else {
+                console.error(xhr.responseText);
+            }
+        };
+        xhr.open('GET', "/cms/ajax/getvacationapply?idx=" + idx);
+        xhr.send(); // 요청 전송
+    }
+
+
+    function getVacationCalCnt(idx) {
+        let xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.status === 200 || xhr.status === 201) {
+                document.querySelector("#vacationcal_cnt_"+idx).innerHTML += xhr.responseText + " 개";
+            } else {
+                console.error(xhr.responseText);
+            }
+        };
+        xhr.open('GET', "/cms/ajax/getvacationrest?idx=" + idx);
+        xhr.send(); // 요청 전송
+    }
+
 </script>
 <div class="uk-card uk-card-default uk-flex uk-margin-medium-left uk-margin-medium-right uk-padding-small uk-margin">
-    <div class="uk-card uk-card-primary uk-padding uk-width-1-4 uk-text-center uk-margin-right">
+    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center uk-margin-right">
         <h3 class="uk-margin-remove-top">총 휴가</h3>
-        <span>1 개</span>
+        <span>${vacationTotal} 개</span>
     </div>
     <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center uk-margin-right">
         <h3 class="uk-margin-remove-top">사용일</h3>
-        <span>1 개</span>
+        <span>${vacationApplyTotal} 개</span>
     </div>
-    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center uk-margin-right">
+    <div class="uk-card uk-card-primary uk-padding uk-width-1-2 uk-text-center uk-margin-right">
         <h3 class="uk-margin-remove-top">남은휴가</h3>
-        <span>1 개</span>
-    </div>
-    <div class="uk-card uk-card-default uk-padding uk-width-1-4 uk-text-center ">
-        <h3 class="uk-margin-remove-top">소멸휴가일수</h3>
-        <span>1 개</span>
+        <span>${vacationTotal-vacationApplyTotal < 0 ? "0" : vacationTotal-vacationApplyTotal} 개</span>
     </div>
 </div>
 <div class="uk-margin-small-top uk-margin-small-bottom uk-margin-medium-left uk-flex">
@@ -83,7 +121,7 @@
 </div>
 <div class="uk-flex uk-width-1-1 uk-flex-between uk-flex-middle uk-margin-small-top uk-margin-small-bottom">
     <div class="uk-margin-medium-left ">
-        총 ${listCount}개의 일정이 있습니다.
+        총 ${listCount}개의 사원이 있습니다.
     </div>
     <div class="uk-text-right uk-flex  uk-width-1-4 uk-margin-medium-right">
         <select class="uk-select" id="list_order" onchange="list_order()">
@@ -102,33 +140,32 @@
         <thead>
         <tr>
             <th class="uk-table-small uk-text-center">번호</th>
-            <th class="uk-table-shrink uk-text-center">구분</th>
-            <th class="uk-table-shrink uk-text-center">이름(아이디)</th>
-            <th class="uk-table-expand uk-text-center">내용</th>
-            <th class="uk-table-shrink uk-text-center">등록일</th>
-            <th class="uk-table-shrink uk-text-center">상태</th>
-            <th class="uk-table-shrink uk-text-center">관리</th>
+            <th class="uk-table-small uk-text-center">이름(아이디)</th>
+            <th class="uk-table-small uk-text-center">총휴가일</th>
+            <th class="uk-table-small uk-text-center">사용일</th>
+            <th class="uk-table-small uk-text-center">남은일</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${calendarMemberList}" var="item" varStatus="status">
+        <c:forEach items="${VacationMemberList}" var="item" varStatus="status">
             <tr>
                 <td class="uk-table-small uk-text-center">${item.rn}</td>
-                <td class="uk-table-small uk-text-center">${item.type}</td>
-                <td class="uk-table-small uk-text-center">${item.name}(${item.userid})</td>
-                <td class="uk-table-expand uk-text-center">
-                    <a href="./view?idx=${item.idx}" class="uk-text-bold">${item.content}</a>
+                <td class="uk-table-small uk-text-center"><a class="uk-text-bold" href="./detail?idx=${item.mem_idx}">${item.name}(${item.userid})</a></td>
+                <td class="uk-table-small uk-text-center" id="vacation_cnt_${item.mem_idx}">
+                    <script>
+                        getVacationCnt('${item.mem_idx}');
+                    </script>
                 </td>
-                <td class="uk-table-small uk-text-center"><fmt:parseDate var="regDateStr" value="${item.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" /><fmt:formatDate value="${regDateStr}" pattern="yyyy-MM-dd" /></td>
-                <td class="uk-table-small uk-text-center">
-                    <select class="uk-select" onchange="select_state(this,${item.idx})">
-                        <option value="0" ${item.state == 0 ? "selected" : ""}>승인대기</option>
-                        <option value="1" ${item.state == 1 ? "selected" : ""}>승인</option>
-                        <option value="2" ${item.state == 2 ? "selected" : ""}>취소</option>
-                    </select>
+                <td class="uk-table-small uk-text-center" id="vacationapply_cnt_${item.mem_idx}">
+                    <script>
+                        getVacationApplyCnt('${item.mem_idx}');
+                    </script>
                 </td>
-                <td class="uk-table-small uk-text-center"><a href="./edit?idx=${item.idx}" class="uk-margin-small-left"><span class="uk-icon-button " uk-icon="file-edit"></span></a><a
-                        href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${item.idx}','삭제')" class="uk-margin-small-left"><span class="uk-icon-button" uk-icon="trash"></span></a></td>
+                <td class="uk-table-small uk-text-center" id="vacationcal_cnt_${item.mem_idx}">
+                    <script>
+                        getVacationCalCnt('${item.mem_idx}');
+                    </script>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

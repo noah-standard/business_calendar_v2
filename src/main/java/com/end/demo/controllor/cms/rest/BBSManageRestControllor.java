@@ -32,9 +32,7 @@ public class BBSManageRestControllor {
 
     @GetMapping("/cms/ajax/title")
     public String BBSManageDepth(@RequestParam(required = false) String code){
-
         String title = adminMenuService.getTitleMenu(code);
-
         return title;
     }
 

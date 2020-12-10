@@ -40,7 +40,7 @@
                 console.error(xhr.responseText);
             }
         };
-        xhr.open('GET', '/cms/ajax/search');
+        xhr.open('post', '/cms/ajax/search');
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8'); // 컨텐츠타입을 json으로
         xhr.send(); // 요청 전송
     }
@@ -70,7 +70,7 @@
                     console.error(xhr.responseText);
                 }
             };
-            xhr.open('POST', url);
+            xhr.open('post', url);
             xhr.send(formData); // 요청 전송
         }
     }
@@ -84,7 +84,7 @@
 </style>
 <input type="hidden" id="id">
 <form method="post" name="calendar_form"
-      class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" action="./write.do">
+      class="uk-form-horizontal uk-margin-medium-left uk-margin-medium-right uk-margin-small-top" action="./write.do" onsubmit="return chk_form(this);">
     <div class="uk-margin">
         <label class="uk-form-label" for="type">이름</label>
         <div class="uk-form-controls">
@@ -95,7 +95,7 @@
     <div class="uk-margin">
         <label class="uk-form-label" for="type">구분</label>
         <div class="uk-form-controls">
-            <select class="uk-select uk-width-1-4" name="type" id="type">
+            <select class="uk-select uk-width-1-4 __ck" title="구분" name="type" id="type">
                 <option value="">----선택----</option>
                 <option value="연차">연차</option>
                 <option value="반차">반차</option>
@@ -103,9 +103,9 @@
         </div>
     </div>
     <div class="uk-margin">
-        <label class="uk-form-label" for="s_date">시작일</label>
+        <label class="uk-form-label" for="s_date">일자</label>
         <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-4 __ck" title="시작일" type="date" id="s_date" name="s_date" value="">
+            <input class="uk-input uk-width-1-4 __ck" title="일자" type="date" id="s_date" name="s_date" value="">
         </div>
     </div>
     <div class="uk-margin">

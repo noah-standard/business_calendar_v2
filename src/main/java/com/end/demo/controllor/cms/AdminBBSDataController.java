@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +36,12 @@ public class AdminBBSDataController {
         model.addAttribute("menuList", adminMenuService.selectAdminMasterMenu());
         model.addAttribute("page", "bbs");
     }
+
+    // 특정 모델 객체에만 적용을 하고 싶을 경우 아래와 같이 이름을 지정.
+//    @InitBinder("BBSDataVO")
+//    public void initEventBinder(WebDataBinder webDataBinder) {
+//        webDataBinder.setDisallowedFields("idx");
+//    }
 
     @GetMapping("list")
     public String BBSDataList(@ModelAttribute BBSPagerVO bbsPagerVO, BindingResult bindingResult, Model model) {
@@ -108,6 +115,10 @@ public class AdminBBSDataController {
     @PostMapping("write.do")
     public String BBSDataWriteProcess(@Valid @ModelAttribute BBSDataVO bbsVO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
+            System.out.println("===============");
+            System.out.println(bbsVO);
+            System.out.println(bindingResult);
+            System.out.println("===============");
             return "redirect:write";
         }
         adminBbsDataService.insertBBSData(bbsVO);

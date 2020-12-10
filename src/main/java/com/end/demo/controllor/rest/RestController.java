@@ -12,10 +12,8 @@ import com.end.demo.vo.join.MemberMemVO;
 import com.end.demo.vo.param.BBSPagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -53,19 +51,17 @@ public class RestController {
         return chkStr;
     }
 
-    @GetMapping("/cms/ajax/search")
-    public ModelAndView memberSearchAjax(@ModelAttribute BBSPagerVO bbsPagerVO){
+    @PostMapping("/cms/ajax/search")
+    public ModelAndView memberSearchAjax(@ModelAttribute BBSPagerVO bbsPagerVO , BindingResult bindingResult){
         String search_order = bbsPagerVO.getSearch_order();
         String keyword = bbsPagerVO.getKeyword();
         int curPage = bbsPagerVO.getCurPage();
         int list_order =bbsPagerVO.getList_order();
-
         // 레코드 갯수 계산
         int count = memberService.countMemberData(search_order, keyword);
         // mst_bbs 페이지블록 및 목록수
         int pageCnt = 10;
         int listCnt = 10;
-
         // 페이지 나누기 관련처리
         Pager pager = new Pager(count, curPage, listCnt, pageCnt);
         int start = pager.getPageBegin();

@@ -23,6 +23,22 @@
         </if>
         <include refid="paging_footer" />
     </select>
+    <select id="selectCalendarDetailList" parameterType="int" resultType="com.end.demo.vo.join.CalendarMemberVO">
+        <include refid="paging_header"/>
+        select rownum,cs_calendar.* from cs_calendar
+        <include refid="search"/>
+        and member_idx = #{idx}
+        <if test="list_order == '0'">
+            order by reg_date desc
+        </if>
+        <if test="list_order == '1'">
+            order by reg_date asc
+        </if>
+        <if test="list_order == ''">
+            order by reg_date desc
+        </if>
+        <include refid="paging_footer" />
+    </select>
     <select id="selectCalendarListNotparameter" resultType="com.end.demo.vo.join.CalendarMemberVO">
         select * from cs_calendar where del_flag = 0 and state != 2
     </select>

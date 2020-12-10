@@ -82,7 +82,7 @@
         <tr>
             <th class="uk-width-small uk-text-center">번호</th>
             <th class="uk-table-expand uk-text-center">제목</th>
-            <th class="uk-table-small uk-text-center">첨부파일</th>
+<%--            <th class="uk-table-small uk-text-center">첨부파일</th>--%>
             <th class="uk-table-small uk-text-center">작성자</th>
             <th class="uk-table-small uk-text-center">등록일</th>
             <th class="uk-table-small uk-text-center">조회수</th>
@@ -94,7 +94,7 @@
             <tr>
                 <td class="uk-width-small uk-text-center">${item.rn}</td>
                 <td class="uk-text-bold"><a href="./view?idx=${item.idx}&code=${mst_bbs.code}">${item.subject}</a></td>
-                <td class="uk-width-small uk-text-center">첨부파일</td>
+<%--                <td class="uk-width-small uk-text-center">첨부파일</td>--%>
                 <td class="uk-width-small uk-text-center">${item.writer}</td>
                 <td class="uk-width-small uk-text-center"><fmt:parseDate var="regDateStr" value="${item.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" /><fmt:formatDate value="${regDateStr}" pattern="yyyy-MM-dd" /></td>
                 <td class="uk-width-small uk-text-center">${item.read_cnt}</td>

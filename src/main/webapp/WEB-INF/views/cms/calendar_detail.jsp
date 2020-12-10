@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="path" value="${pageContext.request.contextPath}/cms/calendar/list" />
+<c:set var="path" value="${pageContext.request.contextPath}/cms/calendar/detail" />
 <script>
     function list(page){
         location.href = '${path}?curPage='+page
@@ -62,24 +62,24 @@
         </thead>
         <tbody>
         <c:forEach items="${calendarMemberList}" var="item" varStatus="status">
-            <tr>
-                <td class="uk-table-small uk-text-center">${item.rn}</td>
-                <td class="uk-table-small uk-text-center">${item.type}</td>
-                <td class="uk-table-small uk-text-center">${item.name}(${item.userid})</td>
-                <td class="uk-table-expand uk-text-center">
-                    <a href="./view?idx=${item.idx}" class="uk-text-bold">${item.content}</a>
-                </td>
-                <td class="uk-table-small uk-text-center"><fmt:parseDate var="regDateStr" value="${item.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" /><fmt:formatDate value="${regDateStr}" pattern="yyyy-MM-dd" /></td>
-                <td class="uk-table-small uk-text-center">
-                    <select class="uk-select" onchange="select_state(this,${item.idx})">
-                        <option value="0" ${item.state == 0 ? "selected" : ""}>승인대기</option>
-                        <option value="1" ${item.state == 1 ? "selected" : ""}>승인</option>
-                        <option value="2" ${item.state == 2 ? "selected" : ""}>취소</option>
-                    </select>
-                </td>
-                <td class="uk-table-small uk-text-center"><a href="./edit?idx=${item.idx}" class="uk-margin-small-left"><span class="uk-icon-button " uk-icon="file-edit"></span></a><a
-                        href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${item.idx}','삭제')" class="uk-margin-small-left"><span class="uk-icon-button" uk-icon="trash"></span></a></td>
-            </tr>
+                    <tr>
+                        <td class="uk-table-small uk-text-center">${item.rn}</td>
+                        <td class="uk-table-small uk-text-center">${item.type}</td>
+                        <td class="uk-table-small uk-text-center">${item.name}(${item.userid})</td>
+                        <td class="uk-table-expand uk-text-center">
+                            <a href="./view?idx=${item.idx}" class="uk-text-bold">${item.content}</a>
+                        </td>
+                        <td class="uk-table-small uk-text-center"><fmt:parseDate var="regDateStr" value="${item.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" /><fmt:formatDate value="${regDateStr}" pattern="yyyy-MM-dd" /></td>
+                        <td class="uk-table-small uk-text-center">
+                            <select class="uk-select" onchange="select_state(this,${item.idx})">
+                                <option value="0" ${item.state == 0 ? "selected" : ""}>승인대기</option>
+                                <option value="1" ${item.state == 1 ? "selected" : ""}>승인</option>
+                                <option value="2" ${item.state == 2 ? "selected" : ""}>취소</option>
+                            </select>
+                        </td>
+                        <td class="uk-table-small uk-text-center"><a href="./edit?idx=${item.idx}" class="uk-margin-small-left"><span class="uk-icon-button " uk-icon="file-edit"></span></a><a
+                                href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${item.idx}','삭제')" class="uk-margin-small-left"><span class="uk-icon-button" uk-icon="trash"></span></a></td>
+                    </tr>
         </c:forEach>
         </tbody>
     </table>

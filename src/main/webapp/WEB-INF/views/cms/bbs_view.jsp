@@ -15,9 +15,10 @@
             <span>이메일: ${bbsObj.email}</span>
         </div>
     </div>
-    <div class="uk-padding" style="height:500px;">
+    <div class="uk-padding" style="min-height:500px;">
         <div class="">${bbsObj.content}</div>
     </div>
+    <p>
     <div class="uk-float-left">
         <a href="../bbs/edit?idx=${bbsObj.idx}&code=${mst_bbs.code}" class="uk-button uk-button-default">수정</a>
         <a href="javascript:void(0)" onclick="confirm_data('./delete.do?idx=${item.idx}&code=${mst_bbs.code}','삭제')" class="uk-button uk-button-default">삭제</a>
@@ -26,4 +27,5 @@
         <a href="javascript:history.back()" class="uk-button uk-button-default">취소</a>
         <a href="../bbs/write?code=${mst_bbs.code}" class="uk-button uk-button-primary">등록</a>
     </div>
+    </p>
 </div>

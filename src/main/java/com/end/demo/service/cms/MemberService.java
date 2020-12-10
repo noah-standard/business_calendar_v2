@@ -49,7 +49,10 @@ public class MemberService {
 
     public void editMember(MemberVO memberVO){
         String password = passwordEncoder.encode(memberVO.getPassword());
-        memberVO.setPassword(password);
+        if(!memberVO.getPassword().equals("")) {
+            memberVO.setPassword(password);
+        }
+
         dao.editMember(memberVO);
     }
 

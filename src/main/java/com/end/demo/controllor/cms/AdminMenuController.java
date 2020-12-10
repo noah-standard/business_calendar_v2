@@ -35,6 +35,8 @@ public class AdminMenuController {
 
     @GetMapping("menu")
     public String getConfig(Model model) {
+//        model.addAttribute("menu", "admin_config");
+//        model.addAttribute("page", "menu_admin");
         model.addAttribute("menu_list",adminMenuService.selectAdminMenu());
         return "cms/template";
     }
@@ -47,6 +49,8 @@ public class AdminMenuController {
 
     @GetMapping("menu/edit")
     public String editMenu(@ModelAttribute AdminMenuVO adminMenuVO) {
+//        model.addAttribute("menu", "admin_config");
+//        model.addAttribute("page", "menu_admin");
         adminMenuService.updateAdminMenu(adminMenuVO);
         return "redirect:menu";
     }

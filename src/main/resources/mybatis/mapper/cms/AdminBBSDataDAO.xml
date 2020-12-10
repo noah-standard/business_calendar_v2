@@ -13,7 +13,7 @@
         <if test="password != null">
             #{password},
         </if>
-        #{email},#{notice},cs_bbs_data_seq.CURRVAL,0,cs_bbs_data_seq.CURRVAL,#{content},#{hid_file},#{bbs_file0},#{bbs_file1},#{bbs_file2},0,#{reg_date})
+        #{email},#{notice},cs_bbs_data_seq.CURRVAL,0,cs_bbs_data_seq.CURRVAL,#{content},#{hid_file, jdbcType=VARCHAR},#{bbs_file0, jdbcType=VARCHAR},#{bbs_file1, jdbcType=VARCHAR},#{bbs_file2, jdbcType=VARCHAR},0,#{reg_date})
     </insert>
     <!-- 레코드 갯수 계산    -->
     <select id="countBBSData" resultType="int">

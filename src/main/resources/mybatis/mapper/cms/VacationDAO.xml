@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.end.demo.dao.cms.IVacationDAO">
+   <select id="getVacationTotal" resultType="int">
+       select sum(vacation) from cs_member_vacation
+   </select>
+    <select id="getVacationApplyTotal" resultType="double">
+       select nvl(sum(decode(type,'연차',1,'반차',0.5,0)),0) from cs_calendar where del_flag = 0
+   </select>
+    <select id="getVacation" parameterType="int" resultType="int">
+       select sum(vacation) from cs_member_vacation where mem_idx = #{idx}
+   </select>
+    <select id="getVacationApply" parameterType="int" resultType="double">
+       select nvl(sum(decode(type,'연차',1,'반차',0.5,0)),0) from cs_calendar where del_flag = 0 and member_idx = #{idx}
+   </select>
+    <select id="selectVacationList" resultType="com.end.demo.vo.join.VacationMemberVO">
+        <include refid="paging_header"/>
+        select rownum,a.vacation,a.mem_idx,a.reg_date,b.userid,b.name from cs_member_vacation a
+        join cs_member b
+        on a.mem_idx = b.idx
+        <include refid="search"/>
+        <if test="list_order == '0'">
+            order by reg_date desc
+        </if>
+        <if test="list_order == '1'">
+            order by reg_date asc
+        </if>
+        <if test="list_order == ''">
+            order by reg_date desc
+        </if>
+        <include refid="paging_footer" />
+    </select>
+    <sql id="search">
+        <choose>
+            <when test="search_order == 'all'">
+                where
+                del_flag= 0
+                and (userid like '%'||'${keyword}'||'%'
+                or name like '%'||'${keyword}'||'%')
+            </when>
+            <otherwise>
+                where del_flag= 0
+                and ${search_order} like '%'||'${keyword}'||'%'
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="paging_header">
+        select * from (select rownum as rn, A.* from (
+    </sql>
+    <sql id="paging_footer">
+        ) A
+        ) where rn between ${start} and ${end}
+    </sql>
+</mapper>

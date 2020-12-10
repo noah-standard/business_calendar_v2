@@ -12,26 +12,9 @@
                     id: id,
                     title: id_title,
                     content: xhr.responseText,
-                    width: "700",
+                    width: "800",
                     height: "600",
                     buttons: {
-                        "등록": function () {
-                            let id = document.querySelector('#id').value;
-                            let idxs = document.querySelectorAll('.uk-checkbox.member_idx');
-                            let check_count = idxs.length;
-                            let check_idx = '';
-                            let element = document.querySelector('#' + id);
-
-                            for (let i = 0; i < check_count; i++) {
-                                if (idxs[i].checked === true) {
-                                    check_idx = idxs[i].value;
-                                    document.querySelector('input[name=member_idx]').value = check_idx;
-                                }
-                            }
-                            let name = document.querySelector('#name_' + check_idx).innerHTML;
-                            document.querySelector('input[name=name]').value = name;
-                            UIkit.modal(element).hide();
-                        },
                         "취소": "close",
                     }
                 };
@@ -40,9 +23,19 @@
                 console.error(xhr.responseText);
             }
         };
-        xhr.open('GET', '/cms/ajax/search');
+        xhr.open('POST', '/cms/ajax/search');
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8'); // 컨텐츠타입을 json으로
         xhr.send(); // 요청 전송
+    }
+
+    function select_member(idx){
+        let idxs = document.querySelectorAll('.uk-checkbox.member_idx');
+        document.querySelector('input[name=member_idx]').value = idx;
+        let name = document.querySelector('#name_' + idx).innerHTML;
+        document.querySelector('input[name=name]').value = name;
+        let id = document.querySelector('#id').value;
+        let element = document.querySelector('#' + id);
+        UIkit.modal(element).hide();
     }
 
 

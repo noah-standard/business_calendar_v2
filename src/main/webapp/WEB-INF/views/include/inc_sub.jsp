@@ -36,7 +36,6 @@
 <div id="modal-example" uk-modal>
     <div class="uk-modal-dialog uk-modal-body">
         <h2 class="uk-modal-title">로그인 정보 입력</h2>
-        <p>(주)아크미디어 일정프로그램 입니다.</p>
         <form action="/" method="post">
             <fieldset class="uk-fieldset">
 

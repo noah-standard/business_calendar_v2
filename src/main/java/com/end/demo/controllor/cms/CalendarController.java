@@ -2,13 +2,11 @@ package com.end.demo.controllor.cms;
 
 import com.end.demo.lib.Pager;
 import com.end.demo.lib.Util;
-import com.end.demo.service.cms.AdminMenuService;
-import com.end.demo.service.cms.AdminService;
-import com.end.demo.service.cms.CalendarService;
-import com.end.demo.service.cms.MemberService;
+import com.end.demo.service.cms.*;
 import com.end.demo.vo.CalendarVO;
 import com.end.demo.vo.MemberVO;
 import com.end.demo.vo.join.CalendarMemberVO;
+import com.end.demo.vo.join.VacationMemberVO;
 import com.end.demo.vo.param.BBSPagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +34,9 @@ public class CalendarController {
     @Autowired
     AdminMenuService adminMenuService;
 
+    @Autowired
+    VacationService vacationService;
+
     @ModelAttribute
     public void pageInfo(Model model){
         model.addAttribute("page", "calendar");
@@ -43,7 +44,7 @@ public class CalendarController {
     }
 
     @GetMapping("/list")
-    public String calendarList(@ModelAttribute BBSPagerVO bbsPagerVO, Model model) {
+    public String calendarList(@ModelAttribute BBSPagerVO bbsPagerVO,BindingResult bindingResult, Model model) {
         String search_order = bbsPagerVO.getSearch_order();
         String keyword = bbsPagerVO.getKeyword();
         int curPage = bbsPagerVO.getCurPage();
@@ -61,7 +62,41 @@ public class CalendarController {
         int end = pager.getPageEnd();
 
         // 리스트 가져오기
-        List<CalendarMemberVO> calendarList = calendarService.selectCalendarList(start, end, search_order, keyword, list_order);
+        List<VacationMemberVO> vacationList = vacationService.selectVacationList(start, end, search_order, keyword, list_order);
+
+        // 보낼 객체
+        model.addAttribute("vacationTotal",vacationService.getVacationTotal());
+        model.addAttribute("vacationApplyTotal",vacationService.getVacationApplyTotal());
+//        model.addAttribute("calendarMemberList", calendarMemberVOS);
+        model.addAttribute("VacationMemberList", vacationList);
+        model.addAttribute("listCount", count);
+        model.addAttribute("search_order", search_order);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("pager", pager);
+        model.addAttribute("calendar_template","calendar_list");
+        model.addAttribute("mode", "목록");
+
+        return "cms/template";
+    }
+
+    @GetMapping("/detail")
+    public String calendarDetailList(@ModelAttribute BBSPagerVO bbsPagerVO,BindingResult bindingResult,@RequestParam int idx, Model model) {
+        String search_order = bbsPagerVO.getSearch_order();
+        String keyword = bbsPagerVO.getKeyword();
+        int curPage = bbsPagerVO.getCurPage();
+        int list_order = bbsPagerVO.getList_order();
+        // 레코드 갯수 계산
+        int count = calendarService.countCalendarData(search_order, keyword);
+        // 페이지블록 및 목록수
+        int pageCnt = 10;
+        int listCnt = 10;
+        // 페이지 나누기 관련처리
+        Pager pager = new Pager(count, curPage, listCnt, pageCnt);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+
+        // 리스트 가져오기
+        List<CalendarMemberVO> calendarList = calendarService.selectCalendarList(start, end, search_order, keyword, list_order,idx);
 
         List<CalendarMemberVO> calendarMemberVOS = new ArrayList<>();
 
@@ -84,16 +119,13 @@ public class CalendarController {
         }
 
         // 보낼 객체
-        model.addAttribute("vacationTotal",calendarService.getVacationTotal());
-        model.addAttribute("vacationApplyTotal",calendarService.getVacationApplyTotal());
-        model.addAttribute("vacationPredictDisapper",calendarService.getVacationDisappear());
         model.addAttribute("calendarMemberList", calendarMemberVOS);
         model.addAttribute("listCount", count);
         model.addAttribute("search_order", search_order);
         model.addAttribute("keyword", keyword);
         model.addAttribute("pager", pager);
-        model.addAttribute("calendar_template","calendar_list");
-        model.addAttribute("mode", "목록");
+        model.addAttribute("calendar_template","calendar_detail");
+        model.addAttribute("mode", "상세목록");
 
         return "cms/template";
     }

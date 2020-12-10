@@ -1,10 +1,7 @@
 package com.end.demo.controllor;
 
 import com.end.demo.service.UserService;
-import com.end.demo.service.cms.AdminService;
-import com.end.demo.service.cms.CalendarService;
-import com.end.demo.service.cms.MemberService;
-import com.end.demo.service.cms.PageManageService;
+import com.end.demo.service.cms.*;
 import com.end.demo.vo.MemberVO;
 import com.end.demo.vo.UserVO;
 import com.end.demo.vo.join.CalendarMemberVO;
@@ -30,12 +27,17 @@ public class MyPageController {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    VacationService vacationService;
+
     @ModelAttribute
-    public void memberInfo(WebSession session,Model model){
-        String userid = session.getAttribute("userid");
+    public void memberInfo(HttpSession session,Model model){
+        String userid = (String)session.getAttribute("userid");
         UserVO userVO = userService.getUser(userid);
         MemberVO memberVO = memberService.getMember(userVO.getIdx());
 
+        model.addAttribute("getVacation",vacationService.getVacation(userVO.getIdx()));
+        model.addAttribute("getVacationApply",vacationService.getVacationApply(userVO.getIdx()));
         model.addAttribute("userMenuList",pageManageService.selectUserMenu());
         model.addAttribute("memberObject",memberVO);
         model.addAttribute("memberLevelObject",memberService.getMemberLevel(memberVO.getMem_level()));
@@ -43,7 +45,7 @@ public class MyPageController {
     }
 
     @GetMapping("")
-    public String memberVie(Model model) {
+    public String memberView(Model model) {
         model.addAttribute("mypage_template","skin/mypage_view");
         return "index";
     }

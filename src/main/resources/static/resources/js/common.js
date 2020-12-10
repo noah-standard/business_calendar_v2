@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let path = window.location.pathname;
     let compPath = path.split("/");    //   "/" 로 전체 url 을 나눈다
 
-    if(compPath[1] == 'cms'){
+    if(compPath[1] == 'cms' || compPath[1] == 'calendar'){
         chk_label();
         editor_label();
     }

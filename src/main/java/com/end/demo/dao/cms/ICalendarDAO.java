@@ -16,11 +16,9 @@ import java.util.List;
 @Repository
 public interface ICalendarDAO {
     public List<CalendarMemberVO> selectCalendarList(int start, int end, String search_order, String keyword, int list_order);
+    public List<CalendarMemberVO> selectCalendarDetailList(int start, int end, String search_order, String keyword, int list_order, int idx);
     public List<CalendarMemberVO> selectCalendarListNotparameter();
     public int countCalendarData(String search_order,String keyword);
-    public int getVacationTotal();
-    public int getVacationApplyTotal();
-    public int getVacationDisappear();
     public CalendarMemberVO getCalendar(int idx);
     public void editCalendar(CalendarMemberVO calendarMemberVO);
     public void deleteCalendar(int idx);

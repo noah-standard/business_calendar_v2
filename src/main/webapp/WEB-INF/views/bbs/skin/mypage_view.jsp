@@ -9,6 +9,8 @@
                     <h3 class="uk-card-title uk-margin-remove-bottom">${memberObject.name}
                         <small>(${memberObject.userid})</small></h3>
                     <p class="uk-text-meta uk-margin-remove-top">${memberLevelObject.mem_name}</p>
+                    <p>휴가일수 : <span class="uk-text-meta uk-margin-remove-top">${getVacation} 개</span></p>
+                    <p>사용한 휴가 : <span class="uk-text-meta uk-margin-remove-top">${getVacationApply} 개</span></p>
                 </div>
             </div>
         </div>

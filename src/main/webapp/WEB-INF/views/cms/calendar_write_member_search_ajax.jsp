@@ -21,23 +21,21 @@
     <table class="uk-table uk-table-hover uk-table-divider uk-table-small uk-table-middle">
         <thead>
         <tr>
-            <th class="uk-width-small uk-text-center"></th>
             <th class="uk-width-small uk-text-center">번호</th>
             <th class="uk-table-expand uk-text-center">직책</th>
             <th class="uk-table-expand uk-text-center">아이디</th>
             <th class="uk-table-expand uk-text-center">이름</th>
+            <th class="uk-table-expand uk-text-center">관리</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${memberList}" var="item" varStatus="status">
             <tr>
-                <td class="uk-width-small uk-text-center">
-                    <input type="checkbox" id="user_${item.idx}" class="uk-checkbox member_idx" value="${item.idx}">
-                </td>
                 <td class="uk-width-small uk-text-center">${item.rn}</td>
                 <td class="uk-width-small uk-text-center">${item.mem_name}</td>
                 <td class="uk-width-small uk-text-center">${item.userid}</td>
                 <td class="uk-width-small uk-text-center" id="name_${item.idx}">${item.name}</td>
+                <td class="uk-width-small uk-text-center"><a href="javascript:void(0)" onclick="select_member('${item.idx}')" class="uk-button uk-button-small uk-button-primary">선택</a></td>
             </tr>
         </c:forEach>
         </tbody>

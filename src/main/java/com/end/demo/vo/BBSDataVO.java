@@ -24,7 +24,6 @@ public class BBSDataVO {
     private long ref_step;
     private long ref_level;
     private String content;
-
     @Null(message = "파일이 없습니다.")
     private String hid_file;
     @Null(message = "파일이 없습니다.")

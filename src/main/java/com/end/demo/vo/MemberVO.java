@@ -12,7 +12,6 @@ public class MemberVO {
     private String userid;
     @NotBlank
     private String name;
-    @NotBlank
     private String password;
     @NotBlank
     private String mem_level;

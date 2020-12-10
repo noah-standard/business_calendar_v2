@@ -21,8 +21,12 @@
     </div>
     <div class="uk-margin">
         <label class="uk-form-label" for="name">비밀번호</label>
-        <div class="uk-form-controls">
-            <input class="uk-input uk-width-1-5" id="password" name="password" type="password" value="">
+        <div class="uk-form-controls uk-flex">
+            <input class="uk-input uk-width-1-5 uk-margin-small-right"  id="password" name="password" type="password" value="">
+            <div class="uk-alert-success uk-margin-remove uk-width-1-2  uk-text-middle" style="height:40px;" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p>비밀번호 변경시 입력하세요</p>
+            </div>
         </div>
     </div>
     <div class="uk-margin">

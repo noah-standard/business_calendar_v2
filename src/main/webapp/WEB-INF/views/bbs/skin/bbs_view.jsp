@@ -13,7 +13,7 @@
         <span>이메일: ${BBSObject.email}</span>
     </div>
 </div>
-<div class="uk-padding" style="height:500px;">
+<div class="uk-padding" style="min-height:500px;">
     <div class="">${BBSObject.content}</div>
 </div>
     <div class="uk-float-right">
