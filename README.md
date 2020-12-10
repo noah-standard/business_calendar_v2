@@ -35,7 +35,7 @@
       <li>동적쿼리</li>
     </ul>
   </li>
-  <li>그래들(Gradle) CI</li>
+  <li>그래들(Gradle) Build Tool</li>
   <li>FullCalendar API(JavaScript) - 달력 API</li>
   <li>휴일 api를 통한 휴일 설정</li>
 </ul>
